@@ -19,22 +19,22 @@ class MrTJPCoreMod {
     ScorgeModLoadingContext.get.getModEventBus.register(this)
 
     @SubscribeEvent
-    def onCommonSetup(event: FMLCommonSetupEvent) {
+    def onCommonSetup(event: FMLCommonSetupEvent): Unit = {
         MrTJPCoreProxy.commonSetup(event)
     }
 
     @SubscribeEvent
-    def onClientSetup(event: FMLClientSetupEvent) {
+    def onClientSetup(event: FMLClientSetupEvent): Unit = {
         MrTJPCoreProxy.clientSetup(event)
     }
 
     @SubscribeEvent
-    def onServerSetup(event: FMLDedicatedServerSetupEvent) {
+    def onServerSetup(event: FMLDedicatedServerSetupEvent): Unit = {
         MrTJPCoreProxy.serverSetup(event)
     }
 
     @SubscribeEvent
-    def onLoadComplete(event: FMLLoadCompleteEvent) {
+    def onLoadComplete(event: FMLLoadCompleteEvent): Unit = {
         MrTJPCoreProxy.loadComplete(event)
     }
 }

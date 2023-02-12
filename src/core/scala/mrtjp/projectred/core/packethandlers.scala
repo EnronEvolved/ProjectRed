@@ -31,7 +31,7 @@ object CoreNetwork
     // Client to server messages
     val NET_TILE_PACKET_TO_SERVER = 3
 
-    def init() {
+    def init(): Unit = {
         LOCK.lock()
         PacketCustomChannelBuilder.named(NET_CHANNEL)
                 .assignClientHandler(() => () => ClientHandler)

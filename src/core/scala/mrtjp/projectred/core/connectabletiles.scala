@@ -110,7 +110,7 @@ trait TTileConnectable extends CoreTile with TTileAcquisitions with IConnectable
     override def canConnectCorner(r:Int) = false
 
     def canConnectPart(part:IConnectable, s:Int, edgeRot:Int):Boolean
-    def onMaskChanged(){}
+    def onMaskChanged(): Unit = {}
 
     def outsideCornerEdgeOpen(s:Int, edgeRot:Int):Boolean = {
         val pos = posOfInternal.relative(Direction.values()(s))

@@ -47,8 +47,8 @@ class TabNode(wMin:Int, hMin:Int, wMax:Int, hMax:Int, val color:Int) extends TNo
     var active = false
     def isOpen = active && size.width==wMax && size.height==hMax
 
-    override def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         val w = if (active) wMax else wMin
         val h = if (active) hMax else hMin
 
@@ -67,8 +67,8 @@ class TabNode(wMin:Int, hMin:Int, wMax:Int, hMax:Int, val color:Int) extends TNo
         else ourChildren.foreach(_.hidden = true)
     }
 
-    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (rayTest(mouse))
         {
             val list = ListBuffer[String]()
@@ -78,14 +78,14 @@ class TabNode(wMin:Int, hMin:Int, wMax:Int, hMax:Int, val color:Int) extends TNo
         }
     }
 
-    def drawTab(stack:MatrixStack){}
+    def drawTab(stack:MatrixStack): Unit = {}
 
-    def drawIcon(stack:MatrixStack){}
+    def drawIcon(stack:MatrixStack): Unit = {}
 
-    def buildToolTip(list:ListBuffer[String]){}
+    def buildToolTip(list:ListBuffer[String]): Unit = {}
 
-    def drawBox(stack:MatrixStack)
-    {
+    def drawBox(stack:MatrixStack): Unit
+    = {
         val r = (color>>16&255)/255.0F
         val g = (color>>8&255)/255.0F
         val b = (color&255)/255.0F
@@ -113,8 +113,8 @@ trait TStackTab extends TabNode
     /** The ItemStack to render as the overlay. */
     var iconStack:ItemStack = ItemStack.EMPTY
 
-    abstract override def drawIcon(stack:MatrixStack)
-    {
+    abstract override def drawIcon(stack:MatrixStack): Unit
+    = {
         super.drawIcon(stack)
         RenderSystem.color4f(1, 1, 1, 1)
         RenderSystem.enableRescaleNormal()
@@ -134,8 +134,8 @@ trait TIconTab extends TabNode
     /** The sprite to render as the overlay. */
     var icon:TextureAtlasSprite = null
 
-    abstract override def drawIcon(stack:MatrixStack)
-    {
+    abstract override def drawIcon(stack:MatrixStack): Unit
+    = {
         super.drawIcon(stack)
         AbstractGui.blit(stack, position.x+3, position.x+3, getBlitOffset, 16, 16, icon)
     }
@@ -163,8 +163,8 @@ class TabControlNode(x:Int, y:Int) extends TNode
       *
       * @param tab The `TabNode` that was clicked. Must be a direct child to this node.
       */
-    def onTabClicked(tab:TabNode)
-    {
+    def onTabClicked(tab:TabNode): Unit
+    = {
         if (tab != active)
         {
             if (active != null) active.active = false
@@ -178,8 +178,8 @@ class TabControlNode(x:Int, y:Int) extends TNode
         }
     }
 
-    override def frameUpdate_Impl(mouse:Point, rframe:Float)
-    {
+    override def frameUpdate_Impl(mouse:Point, rframe:Float): Unit
+    = {
         var dy = 0
         for (w <- ourChildren)
         {

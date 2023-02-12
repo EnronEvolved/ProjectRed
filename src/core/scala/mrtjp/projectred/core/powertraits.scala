@@ -102,22 +102,22 @@ class PowerConductor(val parent:IPowerConnectable, ids:Seq[Int])
      */
     def power = voltage()*Iloc
 
-    def applyCurrent(I:Double)
-    {
+    def applyCurrent(I:Double): Unit
+    = {
         voltage()
         Vflow += I
         Iflow += math.abs(I)
     }
 
-    def applyPower(P:Double)
-    {
+    def applyPower(P:Double): Unit
+    = {
         val Ptot = voltage()*Vloc + 0.1D*P*capacitance
         val dP = math.sqrt(Ptot)-Vloc
         applyCurrent(20.0D*dP/capacitance)
     }
 
-    def drawPower(P:Double)
-    {
+    def drawPower(P:Double): Unit
+    = {
         val Ptot = voltage()*Vloc - 0.1D*P*capacitance
         val dP = if (Ptot < 0.0D) 0.0D else math.sqrt(Ptot)-Vloc
         applyCurrent(20.0D*dP/capacitance)
@@ -125,8 +125,8 @@ class PowerConductor(val parent:IPowerConnectable, ids:Seq[Int])
 
     def powerTotal = (voltage()*Vloc)/(0.1D*capacitance)
 
-    def update()
-    {
+    def update(): Unit
+    = {
         voltage()
         for (id <- ids)
             if (!surge(parent.conductorOut(id), id)) flows(id) = 0.0D
@@ -155,14 +155,14 @@ class PowerConductor(val parent:IPowerConnectable, ids:Seq[Int])
     }
 
     var surgeIn = MSet[PowerConductor]()
-    def applySurge(from:PowerConductor, Iin:Double)
-    {
+    def applySurge(from:PowerConductor, Iin:Double): Unit
+    = {
         surgeIn += from
         applyCurrent(Iin)
     }
 
-    def save(tag:CompoundNBT)
-    {
+    def save(tag:CompoundNBT): Unit
+    = {
         for (i <- flows.indices)
             tag.putDouble("flow"+i, flows(i))
 
@@ -173,8 +173,8 @@ class PowerConductor(val parent:IPowerConnectable, ids:Seq[Int])
         tag.putInt("tm", time)
     }
 
-    def load(tag:CompoundNBT)
-    {
+    def load(tag:CompoundNBT): Unit
+    = {
         for (i <- flows.indices)
             flows(i) = tag.getDouble("flow"+i)
 
@@ -198,23 +198,23 @@ trait TPowerDrawPoint extends PowerConductor
 
     def canWork = charge > 600
 
-    abstract override def update()
-    {
+    abstract override def update(): Unit
+    = {
         super.update()
         charge = (voltage()*10.0D).asInstanceOf[Int]
         flow <<= 1
         if (canWork) flow |= 1
     }
 
-    abstract override def save(tag:CompoundNBT)
-    {
+    abstract override def save(tag:CompoundNBT): Unit
+    = {
         super.save(tag)
         tag.putInt("chg", charge)
         tag.putInt("flow", flow)
     }
 
-    abstract override def load(tag:CompoundNBT)
-    {
+    abstract override def load(tag:CompoundNBT): Unit
+    = {
         super.load(tag)
         charge = tag.getInt("chg")
         flow = tag.getInt("flow")

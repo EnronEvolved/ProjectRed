@@ -16,12 +16,12 @@ trait TColourParticle extends CoreParticle
     def green = rgb.y
     def blue = rgb.z
 
-    def red_=(r:Double){rgb.x = r.toFloat}
-    def green_=(g:Double){rgb.y = g.toFloat}
-    def blue_=(b:Double){rgb.z = b.toFloat}
+    def red_=(r:Double): Unit = {rgb.x = r.toFloat}
+    def green_=(g:Double): Unit = {rgb.y = g.toFloat}
+    def blue_=(b:Double): Unit = {rgb.z = b.toFloat}
 
-    def setRGB(r:Double, g:Double, b:Double)
-    {
+    def setRGB(r:Double, g:Double, b:Double): Unit
+    = {
         red = r
         green = g
         blue = b
@@ -35,8 +35,8 @@ class ColourChangeToAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TColourParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val c = p.asInstanceOf[TColourParticle]
 
         if (time < duration) {
@@ -54,7 +54,7 @@ class ColourChangeToAction extends ParticleAction
         else isFinished = true
     }
 
-    override def compile(p:CoreParticle){}
+    override def compile(p:CoreParticle): Unit = {}
 
     override def copy = ParticleAction.changeColourTo(target.x, target.y, target.z, duration)
 }
@@ -66,8 +66,8 @@ class ColourChangeForAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TColourParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val c = p.asInstanceOf[TColourParticle]
         if (time < duration) {
             c.rgb.add(delta.copy.multiply(deltaTime(time)))
@@ -81,7 +81,7 @@ class ColourChangeForAction extends ParticleAction
         else isFinished = true
     }
 
-    override def compile(p:CoreParticle){}
+    override def compile(p:CoreParticle): Unit = {}
 
     override def copy = ParticleAction.changeColourFor(delta.x, delta.y, delta.z, duration)
 }

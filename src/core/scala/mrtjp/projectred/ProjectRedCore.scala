@@ -18,7 +18,7 @@ class ProjectRedCore {
     CoreContent.register(ScorgeModLoadingContext.get.getModEventBus)
 
     @SubscribeEvent
-    def onCommonSetup(event: FMLCommonSetupEvent) {
+    def onCommonSetup(event: FMLCommonSetupEvent): Unit = {
         CoreProxy.commonSetup(event)
 
         // Compatibility modules
@@ -27,17 +27,17 @@ class ProjectRedCore {
     }
 
     @SubscribeEvent
-    def onClientSetup(event: FMLClientSetupEvent) {
+    def onClientSetup(event: FMLClientSetupEvent): Unit = {
         CoreProxy.clientSetup(event)
     }
 
     @SubscribeEvent
-    def onServerSetup(event: FMLDedicatedServerSetupEvent) {
+    def onServerSetup(event: FMLDedicatedServerSetupEvent): Unit = {
         CoreProxy.serverSetup(event)
     }
 
     @SubscribeEvent
-    def onLoadComplete(event: FMLLoadCompleteEvent) {
+    def onLoadComplete(event: FMLLoadCompleteEvent): Unit = {
         CoreProxy.loadComplete(event)
     }
 }

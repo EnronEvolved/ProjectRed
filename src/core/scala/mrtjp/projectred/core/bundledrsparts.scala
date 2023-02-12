@@ -63,8 +63,8 @@ object BundledCommons
         dropped
     }
 
-    def applyChangeMask(from:Array[Byte], to:Array[Byte], mask:Int)
-    {
+    def applyChangeMask(from:Array[Byte], to:Array[Byte], mask:Int): Unit
+    = {
         for (i <- 0 until 16) if ((mask&1<<i) == 0) to(i) = from(i)
     }
 
@@ -78,8 +78,8 @@ object BundledCommons
 
     def copySignal(signal:Array[Byte]) = if (signal == null) null else signal.clone()
 
-    def saveSignal(tag:CompoundNBT, key:String, signal:Array[Byte])
-    {
+    def saveSignal(tag:CompoundNBT, key:String, signal:Array[Byte]): Unit
+    = {
         if (signal != null) tag.putByteArray(key, signal)
     }
 

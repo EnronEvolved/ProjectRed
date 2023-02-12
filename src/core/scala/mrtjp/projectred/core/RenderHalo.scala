@@ -40,8 +40,8 @@ object RenderHalo
         }
     }
 
-    def addLight(pos:BlockPos, color:Int, box:Cuboid6)
-    {
+    def addLight(pos:BlockPos, color:Int, box:Cuboid6): Unit
+    = {
         renderList :+= new LightCache(pos, color, box)
     }
 

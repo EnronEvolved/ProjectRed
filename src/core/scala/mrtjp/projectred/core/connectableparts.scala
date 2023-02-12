@@ -17,14 +17,14 @@ trait TAcquisitionsCommons extends TMultiPart
     def posOfStraight(dir:Int):BlockPos
     def posOfInternal = pos
 
-    def notifyStraight(dir:Int)
-    {
+    def notifyStraight(dir:Int): Unit
+    = {
         val pos = posOfStraight(dir)
         world.neighborChanged(pos, CBMultipartModContent.blockMultipart, pos)
     }
 
-    def notifyInternal(dir:Int)
-    {
+    def notifyInternal(dir:Int): Unit
+    = {
         tile.notifyPartChange(getInternal(dir))
     }
 }
@@ -57,8 +57,8 @@ trait TFaceAcquisitions extends TAcquisitionsCommons with TFaceOrient
     def rotFromStraight(r:Int) = (r+2)%4
     def rotFromInternal(r:Int) = Rotation.rotationTo(absoluteDir(r), side)
 
-    def notifyCorner(r:Int)
-    {
+    def notifyCorner(r:Int): Unit
+    = {
         val pos = posOfCorner(r)
 
         world.neighborChanged(pos, CBMultipartModContent.blockMultipart, pos)
@@ -167,14 +167,14 @@ trait TConnectableCommons extends TMultiPart with IConnectable
         changed
     }
 
-    def notifyAllExternals()
-    def notifyExternals(mask:Int)
+    def notifyAllExternals(): Unit 
+    def notifyExternals(mask:Int): Unit 
 
     /**
       * By default called when another part requests connection to this part
       * and the request is approved. This is done internally in the traits.
       */
-    def onMaskChanged(){}
+    def onMaskChanged(): Unit = {}
 }
 
 trait TFaceConnectable extends TConnectableCommons with TFaceAcquisitions
@@ -345,13 +345,13 @@ trait TFaceConnectable extends TConnectableCommons with TFaceAcquisitions
 
     def shouldDiscoverCenter = true
 
-    override def notifyAllExternals()
-    {
+    override def notifyAllExternals(): Unit
+    = {
         notifyExternals(0xF)
     }
 
-    override def notifyExternals(mask:Int)
-    {
+    override def notifyExternals(mask:Int): Unit
+    = {
         for (r <- 0 until 4) if ((mask&1<<r) != 0)
             if (maskConnectsCorner(r)) notifyCorner(r)
             else if (maskConnectsStraight(r)) notifyStraight(r)
@@ -448,13 +448,13 @@ trait TCenterConnectable extends TConnectableCommons with TCenterAcquisitions
         else false
     }
 
-    override def notifyAllExternals()
-    {
+    override def notifyAllExternals(): Unit
+    = {
         notifyExternals(0x3F)
     }
 
-    override def notifyExternals(mask:Int)
-    {
+    override def notifyExternals(mask:Int): Unit
+    = {
         for (s <- 0 until 6) if ((mask&1<<s) != 0)
             if (maskConnectsOut(s)) notifyStraight(s)
     }

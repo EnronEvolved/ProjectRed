@@ -25,8 +25,8 @@ object WorldLib
 //        if (!clazz.isInstance(tile)) null.asInstanceOf[T] else tile.asInstanceOf[T]
 //    }
 
-    def bulkBlockUpdate(world:World, pos:BlockPos, bl:Block)
-    {
+    def bulkBlockUpdate(world:World, pos:BlockPos, bl:Block): Unit
+    = {
         for (a <- -3 to 3) for (b <- -3 to 3) for (c <- -3 to 3)
         {
             val md = (if (a < 0) -a else a) + (if (b < 0) -b else b) + (if (c < 0) -c else c)
@@ -38,8 +38,8 @@ object WorldLib
         }
     }
 
-    def dropItem(world:World, pos:BlockPos, stack:ItemStack)
-    {
+    def dropItem(world:World, pos:BlockPos, stack:ItemStack): Unit
+    = {
         if (!world.isClientSide && world.getGameRules.getBoolean(GameRules.RULE_DOBLOCKDROPS))
         {
             val d = 0.7D
@@ -52,8 +52,8 @@ object WorldLib
         }
     }
 
-    def centerEject(w:World, pos:BlockPos, stack:ItemStack, dir:Int, vel:Double)
-    {
+    def centerEject(w:World, pos:BlockPos, stack:ItemStack, dir:Int, vel:Double): Unit
+    = {
         val pos2 = pos.relative(Direction.values()(dir))
         val item = new ItemEntity(w, pos2.getX+0.5D, pos2.getY+0.5D, pos2.getZ+0.5D, stack)
 

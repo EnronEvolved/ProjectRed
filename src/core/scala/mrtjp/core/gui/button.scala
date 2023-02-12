@@ -44,21 +44,21 @@ class ButtonNode extends TNode
         else false
     }
 
-    def onButtonClicked()
-    {
+    def onButtonClicked(): Unit
+    = {
         clickDelegate()
     }
 
-    override def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         RenderSystem.color4f(1, 1, 1, 1)
         val mouseover = mouseoverLock || (frame.contains(mouse) && rayTest(mouse))
         drawButtonBackground(stack, mouseover)
         drawButton(stack, mouseover)
     }
 
-    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (rayTest(mouse))
         {
             val list = new ListBuffer[String]
@@ -73,8 +73,8 @@ class ButtonNode extends TNode
         }
     }
 
-    def drawButtonBackground(stack:MatrixStack, mouseover:Boolean){}
-    def drawButton(stack:MatrixStack, mouseover:Boolean){}
+    def drawButtonBackground(stack:MatrixStack, mouseover:Boolean): Unit = {}
+    def drawButton(stack:MatrixStack, mouseover:Boolean): Unit = {}
 }
 
 /**
@@ -82,8 +82,8 @@ class ButtonNode extends TNode
  */
 trait TButtonMC extends ButtonNode
 {
-    abstract override def drawButtonBackground(stack:MatrixStack, mouseover:Boolean)
-    {
+    abstract override def drawButtonBackground(stack:MatrixStack, mouseover:Boolean): Unit
+    = {
         super.drawButtonBackground(stack, mouseover)
 
         TextureUtils.changeTexture(GuiLib.guiTex)
@@ -106,8 +106,8 @@ trait TButtonText extends ButtonNode
     var text = ""
     def setText(t:String):this.type = {text = t; this}
 
-    abstract override def drawButton(stack:MatrixStack, mouseover:Boolean)
-    {
+    abstract override def drawButton(stack:MatrixStack, mouseover:Boolean): Unit
+    = {
         super.drawButton(stack, mouseover)
         AbstractGui.drawCenteredString(stack, getFontRenderer, text, position.x+size.width/2, position.y+(size.height-8)/2, if (mouseover) 0xFFFFFFA0 else 0xFFE0E0E0)
         RenderSystem.color4f(1, 1, 1, 1)
@@ -121,8 +121,8 @@ class DotSelectNode extends ButtonNode
 {
     size = Size(8, 8)
 
-    override def drawButtonBackground(stack:MatrixStack, mouseover:Boolean)
-    {
+    override def drawButtonBackground(stack:MatrixStack, mouseover:Boolean): Unit
+    = {
         super.drawButtonBackground(stack, mouseover)
         TextureUtils.changeTexture(GuiLib.guiExtras)
         RenderSystem.color4f(1, 1, 1, 1)
@@ -149,16 +149,16 @@ class CheckBoxNode extends ButtonNode with TButtonMC
 
     var state = false
 
-    override def drawButton(stack:MatrixStack, mouseover:Boolean)
-    {
+    override def drawButton(stack:MatrixStack, mouseover:Boolean): Unit
+    = {
         super.drawButton(stack, mouseover)
         TextureUtils.changeTexture(GuiLib.guiExtras)
         val u = if (state) 17 else 1
         blit(stack, position.x, position.y, u, 134, 14, 14)
     }
 
-    override def onButtonClicked()
-    {
+    override def onButtonClicked(): Unit
+    = {
         state = !state
         super.onButtonClicked()
     }

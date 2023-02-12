@@ -85,12 +85,12 @@ trait TPropagationCommons extends TMultiPart with IWirePart
 {
     var propagationMask:Int
 
-    def propagate(prev:TMultiPart, mode:Int)
+    def propagate(prev:TMultiPart, mode:Int): Unit 
 
-    def propagateOther(mode:Int){}
+    def propagateOther(mode:Int): Unit = {}
 
-    def propagateExternal(to:TMultiPart, at:BlockPos, from:TMultiPart, mode:Int)
-    {
+    def propagateExternal(to:TMultiPart, at:BlockPos, from:TMultiPart, mode:Int): Unit
+    = {
         if (to != null) {
             if (to == from) return
             if (propagateTo(to, mode)) return
@@ -98,8 +98,8 @@ trait TPropagationCommons extends TMultiPart with IWirePart
         WirePropagator.addNeighborChange(at)
     }
 
-    def propagateInternal(to:TMultiPart, from:TMultiPart, mode:Int)
-    {
+    def propagateInternal(to:TMultiPart, from:TMultiPart, mode:Int): Unit
+    = {
         if (to == from) return
         propagateTo(to, mode)
     }
@@ -117,8 +117,8 @@ trait TFacePropagation extends TPropagationCommons with TFaceConnectable
 {
     override var propagationMask = 0xF
 
-    override def propagate(prev:TMultiPart, mode:Int)
-    {
+    override def propagate(prev:TMultiPart, mode:Int): Unit
+    = {
         if (mode != FORCED) WirePropagator.addPartChange(this)
         for (r <- 0 until 4) if ((propagationMask&1<<r) != 0) {
             if (maskConnectsInside(r)) propagateInternal(getInternal(r), prev, mode)
@@ -135,8 +135,8 @@ trait TCenterPropagation extends TPropagationCommons with TCenterConnectable
 {
     override var propagationMask = 0x3F
 
-    override def propagate(prev:TMultiPart, mode:Int)
-    {
+    override def propagate(prev:TMultiPart, mode:Int): Unit
+    = {
         if (mode != FORCED) WirePropagator.addPartChange(this)
         for (s <- 0 until 6) if ((propagationMask&1<<s) != 0) {
             if (maskConnectsIn(s)) propagateInternal(getInternal(s), prev, mode)
@@ -151,10 +151,10 @@ trait TRSPropagationCommons extends TPropagationCommons
     def calculateSignal:Int
 
     def getSignal:Int
-    def setSignal(signal:Int)
+    def setSignal(signal:Int): Unit 
 
-    override def updateAndPropagate(prev:TMultiPart, mode:Int)
-    {
+    override def updateAndPropagate(prev:TMultiPart, mode:Int): Unit
+    = {
         if (mode == DROPPING && getSignal == 0) return
         val newSignal = calculateSignal
         if (newSignal < getSignal)

@@ -20,8 +20,8 @@ class AlphaChangeToAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TAlphaParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val p2 = p.asInstanceOf[TAlphaParticle]
 
         if (time < duration)
@@ -35,8 +35,8 @@ class AlphaChangeToAction extends ParticleAction
         else isFinished = true
     }
 
-    override def compile(p:CoreParticle)
-    {
+    override def compile(p:CoreParticle): Unit
+    = {
     }
 
     override def copy = ParticleAction.changeAlphaTo(target, duration)
@@ -49,8 +49,8 @@ class AlphaChangeForAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TAlphaParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val p2 = p.asInstanceOf[TAlphaParticle]
 
         if (time < duration) {
@@ -61,7 +61,7 @@ class AlphaChangeForAction extends ParticleAction
         else isFinished = true
     }
 
-    override def compile(p:CoreParticle){}
+    override def compile(p:CoreParticle): Unit = {}
 
     override def copy = ParticleAction.changeAlphaFor(delta, duration)
 }

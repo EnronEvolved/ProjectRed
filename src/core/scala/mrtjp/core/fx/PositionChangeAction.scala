@@ -26,13 +26,13 @@ trait TPositionedParticle extends CoreParticle
     def position = new Vector3(x, y, z)
     def prevPosition = new Vector3(xo, yo, zo)
 
-    def setPos(pos:Vector3)
-    {
+    def setPos(pos:Vector3): Unit
+    = {
         setPos(pos.x, pos.y, pos.z)
     }
 
-    def setPrevPos(pos:Vector3)
-    {
+    def setPrevPos(pos:Vector3): Unit
+    = {
         xo = pos.x
         yo = pos.y
         zo = pos.z
@@ -40,8 +40,8 @@ trait TPositionedParticle extends CoreParticle
 
     def blockPosition = new BlockPos(math.floor(x).toInt, math.floor(y).toInt, math.floor(z).toInt)
 
-    abstract override def tick()
-    {
+    abstract override def tick(): Unit
+    = {
         super.tick()
         xo = x
         yo = y
@@ -56,8 +56,8 @@ class PositionChangeToAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TPositionedParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val pp = p.asInstanceOf[TPositionedParticle]
 
         val pos = pp.position
@@ -70,7 +70,7 @@ class PositionChangeToAction extends ParticleAction
         else isFinished = true
     }
 
-    override def compile(p:CoreParticle){}
+    override def compile(p:CoreParticle): Unit = {}
 
     override def copy = ParticleAction.moveTo(target.x, target.y, target.z, duration)
 }
@@ -82,14 +82,14 @@ class PositionChangeForAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TPositionedParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val pp = p.asInstanceOf[TPositionedParticle]
         if (time < duration) pp.setPos(pp.position.add(delta.copy.multiply(deltaTime(time))))
         else isFinished = true
     }
 
-    override def compile(p:CoreParticle){}
+    override def compile(p:CoreParticle): Unit = {}
 
     override def copy = ParticleAction.moveFor(delta.x, delta.y, delta.z, duration)
 }

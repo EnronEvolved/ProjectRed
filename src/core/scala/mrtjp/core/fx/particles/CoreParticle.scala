@@ -23,13 +23,13 @@ class CoreParticle(w:ClientWorld) extends Particle(w, 0.0D, 0.0D, 0.0D) {
 
     private var actions = ListBuffer[ParticleAction]()
 
-    def setAge(age: Int) {
+    def setAge(age: Int): Unit = {
         this.age = age
     }
 
     def getAge = age
 
-    def runAction(action: ParticleAction) {
+    def runAction(action: ParticleAction): Unit = {
         if (!action.canOperate(this)) {
             throw new RuntimeException("Particle action was run on an incompatible particle class.")
         }
@@ -38,14 +38,14 @@ class CoreParticle(w:ClientWorld) extends Particle(w, 0.0D, 0.0D, 0.0D) {
         actions += a1
     }
 
-    def removeAction(action: ParticleAction) {
+    def removeAction(action: ParticleAction): Unit = {
         val idx = actions.indexOf(action)
         if (idx > -1) {
             actions.remove(idx)
         }
     }
 
-    override def tick() {
+    override def tick(): Unit = {
         if (hasVelocity) move(xd, yd, zd)
 
         actions.foreach(_.tickLife())
@@ -54,7 +54,7 @@ class CoreParticle(w:ClientWorld) extends Particle(w, 0.0D, 0.0D, 0.0D) {
         if (age > lifetime && !isImmortal) remove()
     }
 
-    override def render(buffer: IVertexBuilder, renderInfo: ActiveRenderInfo, partialTicks: Float):Unit = {
+    override def render(buffer: IVertexBuilder, renderInfo: ActiveRenderInfo, partialTicks: Float): Unit = {
         actions.foreach(_.runOn(this, partialTicks))
         actions = actions.filterNot(_.isFinished)
     }

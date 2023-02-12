@@ -91,8 +91,8 @@ class NodeGui[T <: NodeContainer](c:T = new NodeContainer(null, -1), w:Int, h:In
     var size = Size.zeroSize //todo initialize this to xSize x ySize
     override def frame = new Rect(position, size)
 
-    final override def init()
-    {
+    final override def init(): Unit
+    = {
         super.init()
         position = Point(leftPos, topPos)
         if (size == Size.zeroSize) size = Size(imageWidth, imageHeight) //TODO Legacy (size should be set directly)
@@ -103,20 +103,20 @@ class NodeGui[T <: NodeContainer](c:T = new NodeContainer(null, -1), w:Int, h:In
         }
     }
 
-    final override def tick()
-    {
+    final override def tick(): Unit
+    = {
         super.tick()
         update()
     }
 
-    final override def render(stack:MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float)
-    {
+    final override def render(stack:MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float): Unit
+    = {
         renderBackground(stack)
         super.render(stack, mouseX, mouseY, partialTicks)
         renderTooltip(stack, mouseX, mouseY)
     }
 
-    final override def init(mc:Minecraft, i:Int, j:Int) {
+    final override def init(mc:Minecraft, i:Int, j:Int): Unit = {
         val init = this.minecraft == null
         super.init(mc, i, j)
         if (init) onAddedToParent_Impl()
@@ -167,8 +167,8 @@ class NodeGui[T <: NodeContainer](c:T = new NodeContainer(null, -1), w:Int, h:In
     private var lastFrame = 0.0F
 
     // Front/back rendering overridden, because at root, we dont push the children to our pos, because its zero.
-    final override def renderBg(stack:MatrixStack, f:Float, mx:Int, my:Int)
-    {
+    final override def renderBg(stack:MatrixStack, f:Float, mx:Int, my:Int): Unit
+    = {
         lastFrame = f
         val mouse = new Point(mx, my)
         frameUpdate(mouse, f)
@@ -179,8 +179,8 @@ class NodeGui[T <: NodeContainer](c:T = new NodeContainer(null, -1), w:Int, h:In
         RenderSystem.enableDepthTest()
     }
 
-    final override def renderLabels(stack:MatrixStack, mx:Int, my:Int)
-    {
+    final override def renderLabels(stack:MatrixStack, mx:Int, my:Int): Unit
+    = {
         val mouse = new Point(mx, my)
         RenderSystem.disableDepthTest()
         RenderSystem.color4f(1, 1, 1, 1)

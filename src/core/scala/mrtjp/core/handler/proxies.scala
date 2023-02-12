@@ -10,13 +10,13 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.event.lifecycle.{FMLClientSetupEvent, FMLCommonSetupEvent, FMLDedicatedServerSetupEvent, FMLLoadCompleteEvent}
 
 class MrTJPCoreProxy_server {
-    def commonSetup(event: FMLCommonSetupEvent) {}
+    def commonSetup(event: FMLCommonSetupEvent): Unit = {}
 
-    def clientSetup(event: FMLClientSetupEvent) {}
+    def clientSetup(event: FMLClientSetupEvent): Unit = {}
 
-    def serverSetup(event: FMLDedicatedServerSetupEvent) {}
+    def serverSetup(event: FMLDedicatedServerSetupEvent): Unit = {}
 
-    def loadComplete(event: FMLLoadCompleteEvent) {}
+    def loadComplete(event: FMLLoadCompleteEvent): Unit = {}
 }
 
 class MrTJPCoreProxy_client extends MrTJPCoreProxy_server {

@@ -19,12 +19,12 @@ object WirePropagator
 
     private val rwConnectable = ThreadLocal.withInitial[Boolean](() => true)
     def redwiresConnectable = rwConnectable.get
-    def setRedwiresConnectable(b:Boolean) {rwConnectable.set(b)}
+    def setRedwiresConnectable(b:Boolean): Unit = {rwConnectable.set(b)}
 
     var redwiresProvidePower = true
 
-    def reset()
-    {
+    def reset(): Unit
+    = {
         setDustProvidePower(true)
         setRedwiresConnectable(true)
         redwiresProvidePower = true
@@ -39,23 +39,23 @@ object WirePropagator
         def getType = null
     }
 
-    def addNeighborChange(pos:BlockPos)
-    {
+    def addNeighborChange(pos:BlockPos): Unit
+    = {
         currentRun.neighborChanges += pos
     }
 
-    def addPartChange(part:TMultiPart)
-    {
+    def addPartChange(part:TMultiPart): Unit
+    = {
         currentRun.partChanges.put(part.tile, part)
     }
 
-    def logCalculation()
-    {
+    def logCalculation(): Unit
+    = {
         if (finishing != null) finishing.recalcs += 1
     }
 
-    def propagateTo(part:IWirePart, from:TMultiPart, mode:Int)
-    {
+    def propagateTo(part:IWirePart, from:TMultiPart, mode:Int): Unit
+    = {
         var p = currentRun
         if (p == null) p = if (reusableRuns.isEmpty) new PropagationRun else reusableRuns.pop
         p.add(part, from, mode)
@@ -65,13 +65,13 @@ object WirePropagator
         }
     }
 
-    def propagateTo(part:IWirePart, mode:Int)
-    {
+    def propagateTo(part:IWirePart, mode:Int): Unit
+    = {
         propagateTo(part, notApart, mode)
     }
 
-    def propagateAnalogDrop(part:IWirePart)
-    {
+    def propagateAnalogDrop(part:IWirePart): Unit
+    = {
         currentRun.addAnalogDrop(part)
     }
 }
@@ -89,8 +89,8 @@ class PropagationRun
     var propagationList = Seq.newBuilder[Propagation]
     var analogDrops = Seq.newBuilder[Propagation]
 
-    def clear()
-    {
+    def clear(): Unit
+    = {
         partChanges.clear()
         neighborChanges.clear()
         count = 0
@@ -99,8 +99,8 @@ class PropagationRun
         WirePropagator.reusableRuns.add(this)
     }
 
-    def finish()
-    {
+    def finish(): Unit
+    = {
         WirePropagator.currentRun = null
         val res_NeighborChanges = neighborChanges.result()
 
@@ -131,8 +131,8 @@ class PropagationRun
         clear()
     }
 
-    def start(parent:PropagationRun, world:World)
-    {
+    def start(parent:PropagationRun, world:World): Unit
+    = {
         this.world = world
         this.parent = parent
         WirePropagator.currentRun = this
@@ -141,13 +141,13 @@ class PropagationRun
 
     private var pChange = false
     private var aChange = false
-    private def runLoop()
-    {
+    private def runLoop(): Unit
+    = {
         var ptmp:Seq[Propagation] = null
         var atmp:Seq[Propagation] = null
 
-        def fetch()
-        {
+        def fetch(): Unit
+        = {
             if (pChange || ptmp == null) ptmp = propagationList.result()
             if (aChange || atmp == null) atmp = analogDrops.result()
             pChange = false
@@ -170,8 +170,8 @@ class PropagationRun
         finish()
     }
 
-    def add(part:IWirePart, from: TMultiPart, mode:Int)
-    {
+    def add(part:IWirePart, from: TMultiPart, mode:Int): Unit
+    = {
         if (from != lastCaller) {
             lastCaller = from
             count += 1
@@ -180,8 +180,8 @@ class PropagationRun
         pChange = true
     }
 
-    def addAnalogDrop(part:IWirePart)
-    {
+    def addAnalogDrop(part:IWirePart): Unit
+    = {
         analogDrops += new Propagation(part, WirePropagator.notApart, IWirePart.RISING)
         aChange = true
     }
@@ -189,8 +189,8 @@ class PropagationRun
 
 class Propagation(part:IWirePart, from: TMultiPart, mode:Int)
 {
-    def go()
-    {
+    def go(): Unit
+    = {
         part.updateAndPropagate(from, mode)
     }
 }
@@ -234,13 +234,13 @@ trait IWirePart
      *             may be null.
      * @param mode One of RISING, DROPPING, FORCE and FORCED specified above
      */
-    def updateAndPropagate(prev: TMultiPart, mode:Int)
+    def updateAndPropagate(prev: TMultiPart, mode:Int): Unit 
 
     /**
      * Called at the end of a propogation run for partChanged events. Marks the
      * end of a state change for this part.
      */
-    def onSignalUpdate()
+    def onSignalUpdate(): Unit 
 
     /**
      * @param side The side of this part to test for wire connection. For face

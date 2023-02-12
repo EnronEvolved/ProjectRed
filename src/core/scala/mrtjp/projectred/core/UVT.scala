@@ -7,8 +7,8 @@ class UVT(t:Transformation) extends UVTransformation
 {
     private val vec = new Vector3
 
-    def transform(uv:UV)
-    {
+    def transform(uv:UV): Unit
+    = {
         vec.set(uv.u, 0, uv.v).apply(t)
         uv.set(vec.x, vec.z)
     }

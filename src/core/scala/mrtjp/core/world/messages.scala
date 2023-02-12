@@ -37,8 +37,8 @@ object Messenger
      * @param z
      * @param mail
      */
-    def addMessage(x: Double, y: Double, z: Double, mail: String)
-    {
+    def addMessage(x: Double, y: Double, z: Double, mail: String): Unit
+    = {
         val location = new BlockPos(Math.floor(x).asInstanceOf[Int], Math.floor(y).asInstanceOf[Int], Math.floor(z).asInstanceOf[Int])
 
         val mess = new Message().set(location, x, y, z, mail)
@@ -52,8 +52,8 @@ object Messenger
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    def renderMessages(event:RenderWorldLastEvent)
-    {
+    def renderMessages(event:RenderWorldLastEvent): Unit
+    = {
         val w = Minecraft.getInstance.level
         if (w == null) return
         if (Messenger.messages.isEmpty) return
@@ -73,8 +73,8 @@ object Messenger
     }
 
     @OnlyIn(Dist.CLIENT)
-    private def readMessage(mStack:MatrixStack, m:Message, time:Double)
-    {
+    private def readMessage(mStack:MatrixStack, m:Message, time:Double): Unit
+    = {
         var width = 0
         var height = 0
         val lines = m.msg.split("\n")
@@ -111,8 +111,8 @@ object Messenger
 
 abstract class MailOption
 {
-    def modify(mes:Message)
-    {
+    def modify(mes:Message): Unit
+    = {
         if (mes.msg contains tag)
         {
             change(mes)
@@ -120,7 +120,7 @@ abstract class MailOption
         }
     }
 
-    def change(mes:Message)
+    def change(mes:Message): Unit 
 
     def tag:String
 }
@@ -129,8 +129,8 @@ object Replace extends MailOption
 {
     override def tag = "/#f"
 
-    override def change(mes: Message)
-    {
+    override def change(mes: Message): Unit
+    = {
         for (m <- Messenger.messages.clone()) if (m.location == mes.location)
         {
             Messenger.messages -= m
@@ -143,8 +143,8 @@ object Combine extends MailOption
 {
     override def tag = "/#c"
 
-    override def change(mes: Message)
-    {
+    override def change(mes: Message): Unit
+    = {
         for (m <- Messenger.messages.clone()) if (m.location == mes.location)
         {
             Messenger.messages -= m

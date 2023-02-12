@@ -14,8 +14,8 @@ class InventorySlotNode extends TNode
     var size = Size(16, 16)
     override def frame = Rect(position, size)
 
-    override def frameUpdate_Impl(mouse:Point, rframe:Float)
-    {
+    override def frameUpdate_Impl(mouse:Point, rframe:Float): Unit
+    = {
         val root = getRoot
         val slot = root.getMenu.asInstanceOf[NodeContainer].slots.get(slotIdx)
 

@@ -8,8 +8,8 @@ import java.util.function.Consumer
 
 trait TSwitchPacket extends TMultiPart
 {
-    override final def readUpdate(packet:MCDataInput)
-    {
+    override final def readUpdate(packet:MCDataInput): Unit
+    = {
         read(packet, packet.readUByte())
     }
 
@@ -19,7 +19,7 @@ trait TSwitchPacket extends TMultiPart
         case _ =>
     }
 
-    override final def sendUpdate(func: Consumer[MCDataOutput]) {
+    override final def sendUpdate(func: Consumer[MCDataOutput]): Unit = {
         sendUpdate(0, func.accept)
     }
 
@@ -36,8 +36,8 @@ trait TFaceOrient extends TMultiPart with TFacePart
 
     def side = orientation>>2
 
-    def setSide(s:Int)
-    {
+    def setSide(s:Int): Unit
+    = {
         val oldOrient = orientation
         orientation = (orientation&0x3|s<<2).toByte
         if (oldOrient != orientation) onOrientationChanged(oldOrient)
@@ -45,8 +45,8 @@ trait TFaceOrient extends TMultiPart with TFacePart
 
     def rotation = orientation&0x3
 
-    def setRotation(r:Int)
-    {
+    def setRotation(r:Int): Unit
+    = {
         val oldOrient = orientation
         orientation = (orientation&0xFC|r).toByte
         if (oldOrient != orientation) onOrientationChanged(oldOrient)
@@ -54,7 +54,7 @@ trait TFaceOrient extends TMultiPart with TFacePart
 
     def rotationT = Rotation.sideOrientation(side, rotation).at(Vector3.CENTER)
 
-    def onOrientationChanged(oldOrient:Int) {}
+    def onOrientationChanged(oldOrient:Int): Unit = {}
 
     // internal r from absRot
     def toInternal(absRot:Int) = (absRot+6-rotation)%4

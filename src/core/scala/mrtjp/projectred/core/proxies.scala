@@ -8,15 +8,15 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.event.lifecycle.{FMLClientSetupEvent, FMLCommonSetupEvent}
 
 class CoreProxy_server extends IProxy {
-    override def commonSetup(event: FMLCommonSetupEvent) {
+    override def commonSetup(event: FMLCommonSetupEvent): Unit = {
         CoreNetwork.init()
     }
 
-    def init() {
+    def init(): Unit = {
 //        PacketCustom.assignHandler(CoreSPH.channel, CoreSPH)
     }
 
-    def postinit() {}
+    def postinit(): Unit = {}
 }
 
 class CoreProxy_client extends CoreProxy_server {

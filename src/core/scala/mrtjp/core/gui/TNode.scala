@@ -109,7 +109,7 @@ trait TNode extends AbstractGui
     def buildParentHierarchy(to:TNode) =
     {
         var hierarchy = Seq.newBuilder[TNode]
-        def iterate(node:TNode) {
+        def iterate(node:TNode): Unit = {
             hierarchy += node
             if (node.isRoot || node == to) return
             iterate(node.parent)
@@ -241,7 +241,7 @@ trait TNode extends AbstractGui
     def subTree(activeOnly:Boolean = false) =
     {
         val s = Seq.newBuilder[TNode]
-        def gather(children:Seq[TNode]) {
+        def gather(children:Seq[TNode]): Unit = {
             val ac = if (activeOnly) children.filter(c => !c.hidden && c.userInteractionEnabled) else children
             s ++= ac
             for (c <- ac) gather(c.ourChildren)
@@ -256,8 +256,8 @@ trait TNode extends AbstractGui
       *
       * @param z The new z-position for this node.
       */
-    def pushZTo(z:Double)
-    {
+    def pushZTo(z:Double): Unit
+    = {
         pushZBy(z-zPosition)
     }
 
@@ -267,8 +267,8 @@ trait TNode extends AbstractGui
       *
       * @param z The value to add to this node's z-position.
       */
-    def pushZBy(z:Double)
-    {
+    def pushZBy(z:Double): Unit
+    = {
         for (c <- subTree():+this)
             c.zPosition += z
     }
@@ -282,8 +282,8 @@ trait TNode extends AbstractGui
     }
 
     /** Removes this node and all descendant nodes from the tree. */
-    def removeFromParent()
-    {
+    def removeFromParent(): Unit
+    = {
         parent.ourChildren = parent.ourChildren.filterNot(_ == this)
         parent = null
     }
@@ -294,14 +294,14 @@ trait TNode extends AbstractGui
     /** Creates a sequence of this node and all descendants, sorted by [[zPosition]]. */
     def familyByZ = (Seq(this)++ourChildren).sortBy(_.zPosition)
 
-    protected[gui] final def update()
-    {
+    protected[gui] final def update(): Unit
+    = {
         update_Impl()
         for (c <- childrenByZ) c.update()
     }
 
-    protected[gui] final def frameUpdate(mouse:Point, rframe:Float)
-    {
+    protected[gui] final def frameUpdate(mouse:Point, rframe:Float): Unit
+    = {
         frameUpdate_Impl(mouse, rframe)
         for (c <- childrenByZ) c.frameUpdate(mouse-position, rframe)
     }
@@ -351,8 +351,8 @@ trait TNode extends AbstractGui
         operate2(consumed){keyReleased_Impl(ch, keycode, _)}{_.keyReleased(ch, keycode, _)}
     }
 
-    protected[gui] def drawBack(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    protected[gui] def drawBack(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (!hidden)
         {
             val dp = mouse-position
@@ -369,8 +369,8 @@ trait TNode extends AbstractGui
         }
     }
 
-    protected[gui] def drawFront(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    protected[gui] def drawFront(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (!hidden)
         {
             val dp = mouse-position
@@ -388,8 +388,8 @@ trait TNode extends AbstractGui
     }
 
     //todo move to NodeGui.
-    protected[gui] def rootDrawBack(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    protected[gui] def rootDrawBack(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (!hidden)
         {
             translateTo()
@@ -404,8 +404,8 @@ trait TNode extends AbstractGui
     }
 
     //todo move to NodeGui.
-    protected[gui] def rootDrawFront(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    protected[gui] def rootDrawFront(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (!hidden)
         {
             val dp = mouse-position
@@ -417,16 +417,16 @@ trait TNode extends AbstractGui
         }
     }
 
-    protected[gui] def translateTo(){RenderSystem.translated(position.x, position.y, 0)}//zPosition-(if (parent == null) 0 else parent.zPosition))}
-    protected[gui] def translateFrom(){RenderSystem.translated(-position.x, -position.y, 0)}// -(zPosition-(if (parent == null) 0 else parent.zPosition)))}
+    protected[gui] def translateTo(): Unit = {RenderSystem.translated(position.x, position.y, 0)}//zPosition-(if (parent == null) 0 else parent.zPosition))}
+    protected[gui] def translateFrom(): Unit = {RenderSystem.translated(-position.x, -position.y, 0)}// -(zPosition-(if (parent == null) 0 else parent.zPosition)))}
 
-    protected[gui] def translateToScreen()
-    {
+    protected[gui] def translateToScreen(): Unit
+    = {
         val Point(sx, sy) = parent.convertPointToScreen(Point.zeroPoint)
         RenderSystem.translated(-sx, -sy, 0)
     }
-    protected[gui] def translateFromScreen()
-    {
+    protected[gui] def translateFromScreen(): Unit
+    = {
         val Point(sx, sy) = parent.convertPointToScreen(Point.zeroPoint)
         RenderSystem.translated(sx, sy, 0)
     }
@@ -436,7 +436,7 @@ trait TNode extends AbstractGui
     /**
       * Called every tick from the main game loop.
       */
-    def update_Impl(){}
+    def update_Impl(): Unit = {}
 
     /**
       * Called every frame before background draw call.
@@ -444,10 +444,10 @@ trait TNode extends AbstractGui
       * @param mouse The current position of the mouse, relative to the parent.
       * @param rframe The partial frame until the next frame.
       */
-    def frameUpdate_Impl(mouse:Point, rframe:Float){}
+    def frameUpdate_Impl(mouse:Point, rframe:Float): Unit = {}
 
     /** Called when this node is added to another as a child. */
-    def onAddedToParent_Impl(){}
+    def onAddedToParent_Impl(): Unit = {}
 
     /**
       * Called when the mouse button is clicked.
@@ -525,7 +525,7 @@ trait TNode extends AbstractGui
       * @param mouse The current position of the mouse, relative to the parent.
       * @param rframe The partial frame until the next frame.
       */
-    def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float){}
+    def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit = {}
 
     /**
       * Called to draw the background. All drawing is done relative to the parent, as GL11 is translated to the
@@ -536,5 +536,5 @@ trait TNode extends AbstractGui
       * @param mouse The current position of the mouse, relative to the parent.
       * @param rframe The partial frame until the next frame.
       */
-    def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float){}
+    def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit = {}
 }

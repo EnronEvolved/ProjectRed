@@ -16,8 +16,8 @@ class OrbitAction extends ParticleAction
 
     override def canOperate(p:CoreParticle) = p.isInstanceOf[TPositionedParticle]
 
-    override def operate(p:CoreParticle, time:Double)
-    {
+    override def operate(p:CoreParticle, time:Double): Unit
+    = {
         val p2 = p.asInstanceOf[TPositionedParticle]
 
         val dp = new Vector3(p2.x, 0, p2.z).subtract(target)
@@ -32,7 +32,7 @@ class OrbitAction extends ParticleAction
         if (time > duration) isFinished = true
     }
 
-    override def compile(p:CoreParticle){}
+    override def compile(p:CoreParticle): Unit = {}
 
     override def copy = ParticleAction.orbitAround(target.x, target.z, speed, duration)
 }

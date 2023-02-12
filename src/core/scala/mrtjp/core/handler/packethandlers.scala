@@ -33,7 +33,7 @@ object MrTJPCoreNetwork
     val S_TILE_UPDATE = 1
     val S_KEY_UPDATE = 2
 
-    def init() {
+    def init(): Unit = {
         LOCK.lock()
         PacketCustomChannelBuilder.named(NET_CHANNEL)
             .assignClientHandler(() => () => ClientHandler)
@@ -41,24 +41,24 @@ object MrTJPCoreNetwork
             .build()
     }
 
-    private[handler] def handleTilePacket(world:World, packet:PacketCustom, pos:BlockPos)
-    {
+    private[handler] def handleTilePacket(world:World, packet:PacketCustom, pos:BlockPos): Unit
+    = {
         world.getBlockEntity(pos) match {
             case cpt:TPacketTile => cpt.readFromPacket(packet)
             case _ =>
         }
     }
 
-    def sendTilePacket(world:World, pos:BlockPos, packet:PacketCustom)
-    {
+    def sendTilePacket(world:World, pos:BlockPos, packet:PacketCustom): Unit
+    = {
 
     }
 }
 
 private object ClientHandler extends IClientPacketHandler
 {
-    override def handlePacket(packet: PacketCustom, mc: Minecraft, handler: IClientPlayNetHandler)
-    {
+    override def handlePacket(packet: PacketCustom, mc: Minecraft, handler: IClientPlayNetHandler): Unit
+    = {
         val world = mc.level
         packet.getType match {
             case C_TILE_UPDATE => handleTilePacket(world, packet, packet.readPos())
@@ -70,8 +70,8 @@ private object ClientHandler extends IClientPacketHandler
 
 private object ServerHandler extends IServerPacketHandler
 {
-    override def handlePacket(packet: PacketCustom, sender: ServerPlayerEntity, handler: IServerPlayNetHandler)
-    {
+    override def handlePacket(packet: PacketCustom, sender: ServerPlayerEntity, handler: IServerPlayNetHandler): Unit
+    = {
         packet.getType match
         {
             case S_TILE_UPDATE => handleTilePacket(sender.getLevel, packet, packet.readPos())

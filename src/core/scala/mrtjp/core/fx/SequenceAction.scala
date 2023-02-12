@@ -13,8 +13,8 @@ class SequenceAction extends ParticleAction
 {
     var actions = MSeq[ParticleAction]()
 
-    override def tickLife()
-    {
+    override def tickLife(): Unit
+    = {
         super.tickLife()
         actions.find(!_.isFinished) match
         {
@@ -23,8 +23,8 @@ class SequenceAction extends ParticleAction
         }
     }
 
-    override def runOn(p:CoreParticle, frame:Float)
-    {
+    override def runOn(p:CoreParticle, frame:Float): Unit
+    = {
         super.runOn(p, frame)
 
         actions.find(!_.isFinished) match
@@ -39,16 +39,16 @@ class SequenceAction extends ParticleAction
             isFinished = true
     }
 
-    override def operate(p:CoreParticle, time:Double){}
+    override def operate(p:CoreParticle, time:Double): Unit = {}
 
-    override def compile(p:CoreParticle)
-    {
+    override def compile(p:CoreParticle): Unit
+    = {
         super.compile(p)
         actions.foreach(_.compile(p))
     }
 
-    override def reset()
-    {
+    override def reset(): Unit
+    = {
         super.reset()
         actions.foreach(_.reset())
     }

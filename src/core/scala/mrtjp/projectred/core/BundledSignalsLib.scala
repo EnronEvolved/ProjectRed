@@ -22,7 +22,7 @@ object BundledSignalsLib
 
             case tmp:TileMultiPart =>
                 var signal:Array[Byte] = null
-                def raise(ibe:IBundledEmitter, r:Int) {
+                def raise(ibe:IBundledEmitter, r:Int): Unit = {
                     signal = BundledCommons.raiseSignal(signal, ibe.getBundledSignal(r))
                 }
 

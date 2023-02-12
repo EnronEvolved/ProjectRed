@@ -28,8 +28,8 @@ class ItemListNode extends TNode
 
     override def frame = Rect(position, itemSize.multiply(math.min(items.size, gridWidth), items.size/gridWidth+1))
 
-    def reset()
-    {
+    def reset(): Unit
+    = {
         val it = items.iterator
         var (x, y) = (0, 0)
 
@@ -74,8 +74,8 @@ class ItemDisplayNode extends TNode
 
     override def frame = Rect(position, size)
 
-    override def drawBack_Impl(mStack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawBack_Impl(mStack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         fillGradient(mStack, position.x, position.y, position.x+size.width, position.y+size.height, backgroundColour, backgroundColour)
         ItemDisplayNode.renderItem(mStack, this, position, size, zPosition, drawNumber, stack.makeStack)
     }
@@ -90,14 +90,14 @@ class ItemDisplayNode extends TNode
         else false
     }
 
-    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         if (drawTooltip && frame.contains(mouse) && rayTest(mouse))
             drawTooltip(mouse)
     }
 
-    def drawTooltip(mouse:Point)
-    {
+    def drawTooltip(mouse:Point): Unit
+    = {
         ClipNode.tempDisableScissoring()
         //draw tooltip with absolute coords to allow it to force-fit on screen
         translateToScreen()
@@ -122,8 +122,8 @@ object ItemDisplayNode
 
     // TODO this doesnt work yet but the point is to render an item on the gui of a different size than the standard 16x16
     //      that renders from the common ItemRenderer#renderGuiItem utility method
-    def renderItem(mStack:MatrixStack, gui:AbstractGui, position:Point, size:Size, zPosition:Double, drawNumber:Boolean, stack:ItemStack)
-    {
+    def renderItem(mStack:MatrixStack, gui:AbstractGui, position:Point, size:Size, zPosition:Double, drawNumber:Boolean, stack:ItemStack): Unit
+    = {
         val font = stack.getItem.getFontRenderer(stack) match {
             case null => Minecraft.getInstance().font
             case r => r
@@ -165,8 +165,8 @@ object ItemDisplayNode
 //        font.setUnicodeFlag(f)
     }
 
-    def glItemPre()
-    {
+    def glItemPre(): Unit
+    = {
 //        disableRescaleNormal()
 //        disableDepthTest()
 
@@ -182,8 +182,8 @@ object ItemDisplayNode
 //        disableLighting()
     }
 
-    def glItemPost()
-    {
+    def glItemPost(): Unit
+    = {
         popMatrix()
 //        enableDepthTest()
     }

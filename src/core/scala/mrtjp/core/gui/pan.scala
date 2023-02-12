@@ -49,8 +49,8 @@ class PanNode extends TNode
 
     private var raytestMode = 0
 
-    override def frameUpdate_Impl(mouse:Point, rframe:Float)
-    {
+    override def frameUpdate_Impl(mouse:Point, rframe:Float): Unit
+    = {
         cFrame = calculateChildrenFrame
         val delta = mouse-lastMousePos
         lastMousePos = mouse
@@ -87,8 +87,8 @@ class PanNode extends TNode
         }
     }
 
-    def panChildren(d:Vec2)
-    {
+    def panChildren(d:Vec2): Unit
+    = {
         val d2 = d
         if (d2 != Vec2.zeroVec)
         {
@@ -97,15 +97,15 @@ class PanNode extends TNode
         }
     }
 
-    override def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawBack_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         drawScrollBars(stack)
     }
 
-    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float){}
+    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit = {}
 
-    private def drawScrollBars(stack:MatrixStack)
-    {
+    private def drawScrollBars(stack:MatrixStack): Unit
+    = {
         if (scrollBarVertical)
         {
             fillGradient(stack, position.x+size.width-scrollBarThickness, position.y, position.x+size.width, position.y+size.height, scrollBarBGColour, scrollBarBGColour)

@@ -17,14 +17,14 @@ class RepeatAction extends ParticleAction
     override def canOperate(p:CoreParticle) =
         super.canOperate(p) && action.canOperate(p)
 
-    override def tickLife()
-    {
+    override def tickLife(): Unit
+    = {
         super.tickLife()
         action.tickLife()
     }
 
-    override def runOn(p:CoreParticle, frame:Float)
-    {
+    override def runOn(p:CoreParticle, frame:Float): Unit
+    = {
         super.runOn(p, frame)
 
         if (iter < repeatTimes)
@@ -41,16 +41,16 @@ class RepeatAction extends ParticleAction
             isFinished = true
     }
 
-    override def operate(p:CoreParticle, time:Double){}
+    override def operate(p:CoreParticle, time:Double): Unit = {}
 
-    override def compile(p:CoreParticle)
-    {
+    override def compile(p:CoreParticle): Unit
+    = {
         super.compile(p)
         action.compile(p)
     }
 
-    override def reset()
-    {
+    override def reset(): Unit
+    = {
         super.reset()
         iter = 0
         action.reset()
@@ -63,14 +63,14 @@ class RepeatForeverAction extends ParticleAction
 {
     var action:ParticleAction = null
 
-    override def tickLife()
-    {
+    override def tickLife(): Unit
+    = {
         super.tickLife()
         action.tickLife()
     }
 
-    override def runOn(p:CoreParticle, frame:Float)
-    {
+    override def runOn(p:CoreParticle, frame:Float): Unit
+    = {
         super.runOn(p, frame)
 
         action.runOn(p, frame)
@@ -78,16 +78,16 @@ class RepeatForeverAction extends ParticleAction
             action.reset()
     }
 
-    override def operate(p:CoreParticle, time:Double){}
+    override def operate(p:CoreParticle, time:Double): Unit = {}
 
-    override def compile(p:CoreParticle)
-    {
+    override def compile(p:CoreParticle): Unit
+    = {
         super.compile(p)
         action.compile(p)
     }
 
-    override def reset()
-    {
+    override def reset(): Unit
+    = {
         super.reset()
         action.reset()
     }

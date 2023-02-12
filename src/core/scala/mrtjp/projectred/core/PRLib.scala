@@ -16,8 +16,8 @@ object PRLib
     // Indexed by Direction ordinal. Output is a quarter rotation index 0 - 3
     val bundledCableBaseRotationMap = Array(0, 3, 3, 0, 0, 3)
 
-    def dropTowardsPlayer(w:World, pos:BlockPos, stack:ItemStack, p:PlayerEntity)
-    {
+    def dropTowardsPlayer(w:World, pos:BlockPos, stack:ItemStack, p:PlayerEntity): Unit
+    = {
         if (!w.isClientSide && w.getGameRules.getBoolean(GameRules.RULE_DOBLOCKDROPS))
         {
             val bpos = Vector3.fromVec3i(pos)

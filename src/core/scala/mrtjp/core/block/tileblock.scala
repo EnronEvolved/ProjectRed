@@ -485,7 +485,7 @@ object MultiTileBlock {
 */
 trait TPacketTile extends TileEntity {
 
-    def writeToPacket(packet: MCDataOutput)
+    def writeToPacket(packet: MCDataOutput): Unit
 
-    def readFromPacket(packet: MCDataInput)
+    def readFromPacket(packet: MCDataInput): Unit
 }

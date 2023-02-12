@@ -187,7 +187,7 @@ object CoreContent {
 
     private def simpleItem: Supplier[Item] = () => new Item(new Item.Properties().tab(itemGroupCore))
 
-    def register(bus: IEventBus) {
+    def register(bus: IEventBus): Unit = {
         LOCK.lock()
         BLOCKS.register(bus)
         TILES.register(bus)
@@ -206,7 +206,7 @@ object CoreContent {
 private object DataGen {
 
     @SubscribeEvent
-    def gatherDataGenerators(event: GatherDataEvent) {
+    def gatherDataGenerators(event: GatherDataEvent): Unit = {
         val gen = event.getGenerator
         val helper = event.getExistingFileHelper
         if (event.includeClient) {
@@ -269,7 +269,8 @@ private class BlockStates(gen:DataGenerator, fileHelper:ExistingFileHelper) exte
 }
 
 private class ItemModels(gen: DataGenerator, helper:ExistingFileHelper) extends ItemModelProvider(gen, MOD_ID, helper) {
-    override protected def registerModels() {
+
+    override protected def registerModels(): Unit = {
 
         simpleItemBlock(electrotineGeneratorBlock)
 
@@ -348,7 +349,7 @@ private class ItemModels(gen: DataGenerator, helper:ExistingFileHelper) extends 
 
 private class ItemTags(gen:DataGenerator, helper:ExistingFileHelper) extends ItemTagsProvider(gen, new BlockTagsProvider(gen, MOD_ID, helper), MOD_ID, helper) {
 
-    override protected def addTags() {
+    override protected def addTags(): Unit = {
         tag(Tags.Items.INGOTS)
             .addTag(tagIngotsCopper)
             .addTag(tagIngotsTin)
@@ -415,7 +416,7 @@ private class ItemTags(gen:DataGenerator, helper:ExistingFileHelper) extends Ite
 
 private class Recipes(gen: DataGenerator) extends RecipeProvider(gen) {
 
-    override protected def registerRecipes() {
+    override protected def registerRecipes(): Unit = {
 
         shapedRecipe(electrotineGeneratorBlock)
             .patternLine("bbb")
@@ -607,7 +608,7 @@ private class Recipes(gen: DataGenerator) extends RecipeProvider(gen) {
     }
 
 
-    private def addLumarRecipe(colour: EnumColour) {
+    private def addLumarRecipe(colour: EnumColour): Unit = {
         shapelessRecipe(illumars(colour.ordinal))
             .addIngredient(DUSTS_GLOWSTONE, 2)
             .addIngredient(ItemTags.bind(colour.getDyeTagName), 2)

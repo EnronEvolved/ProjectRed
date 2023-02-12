@@ -58,8 +58,8 @@ class NodeContainer(containerType:ContainerType[_], windowId:Int) extends Contai
             addSlot(slotFactory(playerInv, up(), x, y)) //slots
     }
 
-    override def addSlotListener(listener:IContainerListener)
-    {
+    override def addSlotListener(listener:IContainerListener): Unit
+    = {
         super.addSlotListener(listener)
         listener match {
             case p:PlayerEntity if !p.level.isClientSide =>
@@ -69,8 +69,8 @@ class NodeContainer(containerType:ContainerType[_], windowId:Int) extends Contai
     }
 
 
-    override def removeSlotListener(listener:IContainerListener)
-    {
+    override def removeSlotListener(listener:IContainerListener): Unit
+    = {
         super.removeSlotListener(listener)
         listener match {
             case p:PlayerEntity if !p.level.isClientSide =>
@@ -79,8 +79,8 @@ class NodeContainer(containerType:ContainerType[_], windowId:Int) extends Contai
         }
     }
 
-    override def removed(p:PlayerEntity)
-    {
+    override def removed(p:PlayerEntity): Unit
+    = {
         super.removed(p)
         if (!p.level.isClientSide)
             stopWatchDelegate(p)
@@ -278,8 +278,8 @@ class NodeContainer(containerType:ContainerType[_], windowId:Int) extends Contai
     }
 
     //Hack to allow empty containers for use with guis without inventories
-    override def setItem(slot:Int, stack:ItemStack)
-    {
+    override def setItem(slot:Int, stack:ItemStack): Unit
+    = {
         if (slots.isEmpty || slots.size < slot) return
         else super.setItem(slot, stack)
     }
@@ -291,8 +291,8 @@ class Slot3(inv:IInventory, i:Int, x:Int, y:Int) extends Slot(inv, i, x, y) with
     override def mayPickup(player:PlayerEntity):Boolean = canRemoveDelegate()
     override def mayPlace(stack:ItemStack):Boolean = canPlaceDelegate(stack)
 
-    override def setChanged()
-    {
+    override def setChanged(): Unit
+    = {
         super.setChanged()
         slotChangeDelegate()
         slotChangeDelegate2()

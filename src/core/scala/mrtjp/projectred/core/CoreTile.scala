@@ -173,13 +173,13 @@ abstract class CoreTile(tileType:TileEntityType[_]) extends TileEntity(tileType)
         readDesc(in)
     }
 
-    def saveToNBT(tag:CompoundNBT) {}
+    def saveToNBT(tag:CompoundNBT): Unit = {}
 
-    def loadFromNBT(tag:CompoundNBT) {}
+    def loadFromNBT(tag:CompoundNBT): Unit = {}
 
-    def writeDesc(out:MCDataOutput) {}
+    def writeDesc(out:MCDataOutput): Unit = {}
 
-    def readDesc(in:MCDataInput) {}
+    def readDesc(in:MCDataInput): Unit = {}
 
     /**
      * Sends a custom update packet to the other side. If this is serverside,
@@ -188,7 +188,7 @@ abstract class CoreTile(tileType:TileEntityType[_]) extends TileEntity(tileType)
      * @param key
      * @param writeFunc
      */
-    final def sendUpdate(key:Int, writeFunc:MCDataOutput => Unit) {
+    final def sendUpdate(key:Int, writeFunc:MCDataOutput => Unit): Unit = {
         val packet = CoreNetwork.createUpdatePacket(this)
         packet.writeByte(key)
         writeFunc(packet)
@@ -227,7 +227,7 @@ trait TTileOrient extends CoreTile {
 
     def rotationT:Transformation = Rotation.sideOrientation(side, rotation).at(Vector3.CENTER)
 
-    def onOrientChanged(oldOrient: Int) {}
+    def onOrientChanged(oldOrient: Int): Unit = {}
 
     // internal r from absRot
     def toInternal(absRot: Int):Int = (absRot + 6 - rotation) % 4

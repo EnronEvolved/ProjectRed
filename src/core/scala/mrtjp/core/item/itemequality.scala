@@ -20,8 +20,8 @@ class ItemEquality
         c
     }
 
-    def setFlags(nbt:Boolean, tags:Boolean)
-    {
+    def setFlags(nbt:Boolean, tags:Boolean): Unit
+    = {
         matchNBT = nbt
         matchTags = tags
     }

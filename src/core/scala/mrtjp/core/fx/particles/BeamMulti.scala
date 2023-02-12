@@ -35,8 +35,8 @@ class BeamMulti(w:ClientWorld) extends CoreParticle(w) with TAlphaParticle with 
         }
     }*/
 
-    def drawBeam(buffer:BufferBuilder, p1:Vector3, p2:Vector3, f:Float)
-    {
+    def drawBeam(buffer:BufferBuilder, p1:Vector3, p2:Vector3, f:Float): Unit
+    = {
 /*        val var9 = 1.0F
         val slide = getAge
         val size = 0.7F

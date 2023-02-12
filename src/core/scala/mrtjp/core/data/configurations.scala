@@ -83,7 +83,7 @@ abstract class ModConfig(modID:String)
 
     def getFileName = modID
 
-    def loadConfig()
+    def loadConfig(): Unit =
     {
         config = new StandardConfigFile(Paths.get("./config/", getFileName + ".cfg")).load()
         initValues()
@@ -91,5 +91,5 @@ abstract class ModConfig(modID:String)
         config.save()
     }
 
-    protected def initValues()
+    protected def initValues(): Unit
 }

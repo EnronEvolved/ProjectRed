@@ -30,8 +30,8 @@ class ItemScrewdriver extends Item(new Item.Properties().stacksTo(1).durability(
 
     override def canUse(player: PlayerEntity, stack:ItemStack) = true
 
-    override def damageScrewdriver(player: PlayerEntity, stack:ItemStack)
-    {
+    override def damageScrewdriver(player: PlayerEntity, stack:ItemStack): Unit
+    = {
         if (!Configurator.unbreakableScrewdriver)
             stack.hurtAndBreak(1, player, (p:PlayerEntity) => {})
     }

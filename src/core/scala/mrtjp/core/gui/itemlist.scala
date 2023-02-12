@@ -59,20 +59,20 @@ class NodeItemList(x:Int, y:Int, w:Int, h:Int) extends TNode
         this
     }
 
-    def pageUp()
-    {
+    def pageUp(): Unit
+    = {
         currentPage += 1
         if (currentPage > pagesNeeded) currentPage = pagesNeeded
     }
 
-    def pageDown()
-    {
+    def pageDown(): Unit
+    = {
         currentPage -= 1
         if (currentPage < 0) currentPage = 0
     }
 
-    def resetDownloadStats()
-    {
+    def resetDownloadStats(): Unit
+    = {
         waitingForList = true
         downloadFinished = false
     }
@@ -96,8 +96,8 @@ class NodeItemList(x:Int, y:Int, w:Int, h:Int) extends TNode
         count
     }
 
-    override def drawBack_Impl(stack:MatrixStack, mouse:Point, frame:Float)
-    {
+    override def drawBack_Impl(stack:MatrixStack, mouse:Point, frame:Float): Unit
+    = {
         fillGradient(stack, x, y, x+size.width, y+size.height, 0xff808080, 0xff808080)
         pagesNeeded = (getSeachedCount-1)/(rows*columns)
         if (pagesNeeded < 0) pagesNeeded = 0
@@ -107,8 +107,8 @@ class NodeItemList(x:Int, y:Int, w:Int, h:Int) extends TNode
         else drawAllItems(stack, mouse.x, mouse.y)
     }
 
-    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float)
-    {
+    override def drawFront_Impl(stack:MatrixStack, mouse:Point, rframe:Float): Unit
+    = {
         //TODO tooltips
 //        if (hover != null) GuiDraw.drawMultiLineTip(
 //            mouse.x+12, mouse.y-12,
@@ -129,8 +129,8 @@ class NodeItemList(x:Int, y:Int, w:Int, h:Int) extends TNode
         else false
     }
 
-    private def drawLoadingScreen(stack:MatrixStack)
-    {
+    private def drawLoadingScreen(stack:MatrixStack): Unit
+    = {
         val barSizeX = size.width/2
         val time = System.currentTimeMillis/(if (waitingForList) 40 else 8)
         val percent = (time%barSizeX).asInstanceOf[Int]
@@ -146,8 +146,8 @@ class NodeItemList(x:Int, y:Int, w:Int, h:Int) extends TNode
         fillGradient(stack, xStart, yStart, xStart+xSize, yStart+ySize, 0xff165571, 0xff165571)
     }
 
-    private def drawAllItems(stack:MatrixStack, mx:Int, my:Int)
-    {
+    private def drawAllItems(stack:MatrixStack, mx:Int, my:Int): Unit
+    = {
         hover = null
         selection = null
         val xOffset = x-(squareSize-2)
@@ -214,8 +214,8 @@ class NodeItemList(x:Int, y:Int, w:Int, h:Int) extends TNode
     }
 
     protected var renderItem = Minecraft.getInstance().getItemRenderer
-    private def inscribeItemStack(mStack:MatrixStack, xPos:Int, yPos:Int, stack:ItemStack)
-    {
+    private def inscribeItemStack(mStack:MatrixStack, xPos:Int, yPos:Int, stack:ItemStack): Unit
+    = {
         val font = stack.getItem.getFontRenderer(stack) match {
             case null => getFontRenderer
             case r => r
