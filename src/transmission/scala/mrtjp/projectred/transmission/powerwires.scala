@@ -14,14 +14,14 @@ trait TPowerWireCommons extends TWireCommons with TPowerPartCommons with ITickab
 {
     val cond:PowerConductor
 
-    override def save(tag: CompoundNBT)
-    {
+    override def save(tag: CompoundNBT): Unit
+    = {
         super.save(tag)
         cond.save(tag)
     }
 
-    override def load(tag: CompoundNBT)
-    {
+    override def load(tag: CompoundNBT): Unit
+    = {
         super.load(tag)
         cond.load(tag)
     }
@@ -30,10 +30,10 @@ trait TPowerWireCommons extends TWireCommons with TPowerPartCommons with ITickab
 
     def getExternalCond(id:Int):PowerConductor
 
-    override def updateAndPropagate(prev:TMultiPart, mode:Int) {}
+    override def updateAndPropagate(prev:TMultiPart, mode:Int): Unit = {}
 
-    override def tick()
-    {
+    override def tick(): Unit
+    = {
         if (!world.isClientSide) cond.update()
     }
 

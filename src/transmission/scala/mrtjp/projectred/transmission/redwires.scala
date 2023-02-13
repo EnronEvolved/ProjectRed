@@ -19,26 +19,26 @@ trait TRedwireCommons extends TWireCommons with TRSAcquisitionsCommons with TRSP
 {
     var signal:Byte = 0
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         super.save(tag)
         tag.putByte("signal", signal)
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         super.load(tag)
         signal = tag.getByte("signal")
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         super.writeDesc(packet)
         packet.writeByte(signal)
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         super.readDesc(packet)
         signal = packet.readByte
     }
@@ -64,10 +64,10 @@ trait TRedwireCommons extends TWireCommons with TRSAcquisitionsCommons with TRSP
     override def getRedwireSignal(side:Int) = getSignal
 
     override def getSignal = signal&0xFF
-    override def setSignal(sig:Int){ signal = sig.toByte }
+    override def setSignal(sig:Int): Unit = { signal = sig.toByte }
 
-    override def onSignalUpdate()
-    {
+    override def onSignalUpdate(): Unit
+    = {
         super.onSignalUpdate()
         sendUpdate(10, _.writeByte(signal))
     }
@@ -151,7 +151,7 @@ abstract class RedwirePart(wireType:WireType) extends WirePart(wireType) with TR
         WirePropagator.setDustProvidePower(false)
         WirePropagator.redwiresProvidePower = false
         var s = 0
-        def raise(sig:Int){ if (sig > s) s = sig }
+        def raise(sig:Int): Unit = { if (sig > s) s = sig }
 
         for (r <- 0 until 4) if (maskConnects(r))
             if (maskConnectsCorner(r)) raise(calcCornerSignal(r))
@@ -195,8 +195,8 @@ abstract class FramedRedwirePart(wireType:WireType) extends FramedWirePart(wireT
         case _ => false
     }
 
-    override def propagateOther(mode:Int)
-    {
+    override def propagateOther(mode:Int): Unit
+    = {
         for (s <- 0 until 6) if (!maskConnects(s))
             WirePropagator.addNeighborChange(pos.relative(Direction.values()(s)))
     }
@@ -206,7 +206,7 @@ abstract class FramedRedwirePart(wireType:WireType) extends FramedWirePart(wireT
         WirePropagator.setDustProvidePower(false)
         WirePropagator.redwiresProvidePower = false
         var s = 0
-        def raise(sig:Int) {if (sig > s) s = sig}
+        def raise(sig:Int): Unit = {if (sig > s) s = sig}
 
         for (s <- 0 until 6)
         {
@@ -256,14 +256,14 @@ class RedAlloyWirePart(wireType:WireType) extends RedwirePart(wireType) with TRe
 
     override def redstoneConductionMap = 0x1F
 
-    override def onRemoved()
-    {
+    override def onRemoved(): Unit
+    = {
         super.onRemoved()
         if (!world.isClientSide) tile.notifyNeighborChange(side)
     }
 
-    override def propagateOther(mode:Int)
-    {
+    override def propagateOther(mode:Int): Unit
+    = {
         WirePropagator.addNeighborChange(pos.relative(Direction.values()(side)))
         WirePropagator.addNeighborChange(pos.relative(Direction.values()(side^1)))
 
@@ -282,26 +282,26 @@ trait TInsulatedCommons extends TRedwireCommons with IInsulatedRedwirePart
 {
     var colour = getWireType.getColourIdx.toByte
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         super.save(tag)
         tag.putByte("colour", colour)
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         super.load(tag)
         colour = tag.getByte("colour")
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         super.writeDesc(packet)
         packet.writeByte(colour)
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         super.readDesc(packet)
         colour = packet.readByte()
     }

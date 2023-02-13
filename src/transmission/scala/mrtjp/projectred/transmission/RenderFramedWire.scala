@@ -44,8 +44,8 @@ object RenderFramedWire extends IMicroHighlightRenderer
         m
     }
 
-    def render(w:FramedWirePart, ccrs:CCRenderState)
-    {
+    def render(w:FramedWirePart, ccrs:CCRenderState): Unit
+    = {
         val key = modelKey(w)
         val uvt = new IconTransformation(w.getIcon)
         val m = ColourMultiplier.instance(w.renderHue)
@@ -63,20 +63,20 @@ object RenderFramedWire extends IMicroHighlightRenderer
         }
     }
 
-    private def renderWireFrame(key:Int, ccrs:CCRenderState, ops:IVertexOperation*)
-    {
+    private def renderWireFrame(key:Int, ccrs:CCRenderState, ops:IVertexOperation*): Unit
+    = {
         frameModels(6).render(ccrs, ops:_*)
         for (s <- 0 until 6) if ((key&1<<s) != 0) frameModels(s).render(ccrs, ops:_*)
     }
 
-    def renderInv(thickness:Int, hue:Int, ccrs:CCRenderState, ops:IVertexOperation*)
-    {
+    def renderInv(thickness:Int, hue:Int, ccrs:CCRenderState, ops:IVertexOperation*): Unit
+    = {
         getOrGenerateWireModel(modelKey(thickness, 0x3C)).render(ccrs, ops :+ ColourMultiplier.instance(hue):_*)
         renderWireFrame(modelKey(thickness, 0), ccrs, ops:_*)
     }
 
-    def renderCoverHighlight(part:FramedWirePart, material:MicroMaterial, ccrs:CCRenderState, mStack: MatrixStack, getter: IRenderTypeBuffer)
-    {
+    def renderCoverHighlight(part:FramedWirePart, material:MicroMaterial, ccrs:CCRenderState, mStack: MatrixStack, getter: IRenderTypeBuffer): Unit
+    = {
         val pos = part.pos
 
         val mat = new Matrix4(mStack)
@@ -122,8 +122,8 @@ private object FWireFrameModelGen
         frameModels
     }
 
-    private def generateCenterModel()
-    {
+    private def generateCenterModel(): Unit
+    = {
         val model = CCModel.quadModel(48)
         model.verts(0) = new Vertex5(0.5-w, 0.5-w, 0.5-w, 20, 8)
         model.verts(1) = new Vertex5(0.5+w, 0.5-w, 0.5-w, 28, 8)
@@ -137,8 +137,8 @@ private object FWireFrameModelGen
         frameModels(6) = model
     }
 
-    private def generateSideModels()
-    {
+    private def generateSideModels(): Unit
+    = {
         val model = CCModel.quadModel(36)
         model.verts(0) = new Vertex5(0.5-w, 0, 0.5+w, 16, 0)
         model.verts(1) = new Vertex5(0.5+w, 0, 0.5+w, 16, 8)
@@ -169,8 +169,8 @@ private object FWireFrameModelGen
         }
     }
 
-    private def finishModels()
-    {
+    private def finishModels(): Unit
+    = {
         for (m <- frameModels)
         {
             m.apply(new UVScale(1/32D))
@@ -231,8 +231,8 @@ class FWireModelGen
         a
     }
 
-    private def setup(key:Int)
-    {
+    private def setup(key:Int): Unit
+    = {
         connMap = key&0x3F
         connCount = countConnections(connMap)
         axisCount = countAxis(connMap)
@@ -393,8 +393,8 @@ class FWireModelGen
         model
     }
 
-    private def generateJacketedSide(s:Int)
-    {
+    private def generateJacketedSide(s:Int): Unit
+    = {
         val d =
             if ((connMap&1<<s) != 0) 0.00D
             else if (connCount == 0) 0.25D
@@ -476,8 +476,8 @@ class FWireModelGen
         true
     }
 
-    private def reverseOrder(verts:Array[Vertex5])
-    {
+    private def reverseOrder(verts:Array[Vertex5]): Unit
+    = {
         var k = 0
         while (k < verts.length)
         {
@@ -497,8 +497,8 @@ class FWireModelGen
         k+verts.length
     }
 
-    private def finishModel()
-    {
+    private def finishModel(): Unit
+    = {
         model.apply(new UVScale(1/32D))
         model.shrinkUVs(0.0005)
         model.computeNormals
@@ -508,13 +508,13 @@ class FWireModelGen
 
 class FWireJacketModel(wire:CCModel, boxes:Array[IndexedCuboid6], highlightBoxes:Array[IndexedCuboid6])
 {
-    def renderWire(ccrs:CCRenderState, ops:IVertexOperation*)
-    {
+    def renderWire(ccrs:CCRenderState, ops:IVertexOperation*): Unit
+    = {
         wire.render(ccrs, ops:_*)
     }
 
-    def renderMaterial(material:MicroMaterial, ccrs:CCRenderState, inventory:Boolean)
-    {
+    def renderMaterial(material:MicroMaterial, ccrs:CCRenderState, inventory:Boolean): Unit
+    = {
         val layer = if (inventory) null else RenderType.solid()
         for (b <- boxes) MicroblockRender.renderCuboid(ccrs, material, layer, b, b.data.asInstanceOf[Int])
     }

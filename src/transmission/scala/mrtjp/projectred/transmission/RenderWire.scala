@@ -67,8 +67,8 @@ object RenderWire
         m
     }
 
-    def render(w:WirePart, ccrs:CCRenderState)
-    {
+    def render(w:WirePart, ccrs:CCRenderState): Unit
+    = {
         getOrGenerateModel(modelKey(w)).render(ccrs,
             new IconTransformation(w.getIcon),
             ColourMultiplier.instance(w.renderHue))
@@ -82,8 +82,8 @@ object RenderWire
         getOrGenerateModel(modelKey).render(ccrs, ops:_*)
     }
 
-    def renderInv(thickness:Int, hue:Int, ccrs:CCRenderState, ops:IVertexOperation*)
-    {
+    def renderInv(thickness:Int, hue:Int, ccrs:CCRenderState, ops:IVertexOperation*): Unit
+    = {
         getOrGenerateInvModel(thickness).render(ccrs, ops :+ ColourMultiplier.instance(hue):_*)
     }
 
@@ -162,8 +162,8 @@ class WireModelGen
         model
     }
 
-    private def generateCenter()
-    {
+    private def generateCenter(): Unit
+    = {
         var tex = connCount match//0 = straight n/s, 1 = straight e/w, 2 = circle
         {
             case 0 => 1
@@ -197,8 +197,8 @@ class WireModelGen
         i = addVerts(model, verts, i)
     }
 
-    private def generateSide(r:Int)
-    {
+    private def generateSide(r:Int): Unit
+    = {
         val stype = (mask>>r)&0x11
 
         val verts = if (inv) generateSideInv(r) else connCount match
@@ -334,8 +334,8 @@ class WireModelGen
     }
 
     private val sideReflect = new UVT(Rotation.quarterRotations(2).at(new Vector3(8, 0, 16)))
-    private def reflectSide(verts:Array[Vertex5], r:Int)
-    {
+    private def reflectSide(verts:Array[Vertex5], r:Int): Unit
+    = {
         if ((r+PRLib.bundledCableBaseRotationMap(side))%4 >= 2) for (vert <- verts) vert.apply(sideReflect)
     }
 
@@ -348,8 +348,8 @@ class WireModelGen
         k+verts.length
     }
 
-    private def finishModel()
-    {
+    private def finishModel(): Unit
+    = {
         model.apply(new UVScale(1/32D))
         model.shrinkUVs(0.0005)
         model.computeNormals

@@ -56,17 +56,17 @@ class TransmissionProxyClient extends TransmissionProxy
 
     lazy val spriteHelper = new SpriteRegistryHelper(ScorgeModLoadingContext.get.getModEventBus)
 
-    override def construct() {
+    override def construct(): Unit = {
         super.construct()
         ScorgeModLoadingContext.get.getModEventBus.addListener(onModelRegistryEvent)
         for(wireType <- WireType.values()) wireType.registerTextures(spriteHelper)
     }
 
-    override def clientSetup(event: FMLClientSetupEvent) {
+    override def clientSetup(event: FMLClientSetupEvent): Unit = {
         MicroMaterialRegistry.registerHighlightRenderer(RenderFramedWire)
     }
 
-    def onModelRegistryEvent(event: ModelRegistryEvent) {
+    def onModelRegistryEvent(event: ModelRegistryEvent): Unit = {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(MOD_ID, "wire"), new WireModelLoader)
         ModelLoaderRegistry.registerLoader(new ResourceLocation(MOD_ID, "framed_wire"), new FramedWireModelLoader)
     }

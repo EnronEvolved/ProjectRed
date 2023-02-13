@@ -26,27 +26,27 @@ class ProjectRedTransmission
     MinecraftForge.EVENT_BUS.addListener(serverStarting)
 
     @SubscribeEvent
-    def onCommonSetup(event: FMLCommonSetupEvent) {
+    def onCommonSetup(event: FMLCommonSetupEvent): Unit = {
         proxy.commonSetup(event)
     }
 
     @SubscribeEvent
-    def onClientSetup(event: FMLClientSetupEvent) {
+    def onClientSetup(event: FMLClientSetupEvent): Unit = {
         proxy.clientSetup(event)
     }
 
     @SubscribeEvent
-    def onServerSetup(event: FMLDedicatedServerSetupEvent) {
+    def onServerSetup(event: FMLDedicatedServerSetupEvent): Unit = {
         proxy.serverSetup(event)
     }
 
     @SubscribeEvent
-    def onLoadComplete(event: FMLLoadCompleteEvent) {
+    def onLoadComplete(event: FMLLoadCompleteEvent): Unit = {
         proxy.loadComplete(event)
     }
 
-    def serverStarting(event:FMLServerAboutToStartEvent)
-    {
+    def serverStarting(event:FMLServerAboutToStartEvent): Unit
+    = {
         WirePropagator.reset()
     }
 }

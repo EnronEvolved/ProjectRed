@@ -276,7 +276,7 @@ object TransmissionContent {
 
     private def wirePart(wireType: WireType): Supplier[MultiPartType[_]] = () => new SimpleMultiPartType[TMultiPart](wireType)
 
-    def register(bus: IEventBus) {
+    def register(bus: IEventBus): Unit = {
         LOCK.lock()
         ITEMS.register(bus)
         PARTS.register(bus)
@@ -288,7 +288,7 @@ object TransmissionContent {
 private object DataGen {
 
     @SubscribeEvent
-    def gatherDataGenerators(event: GatherDataEvent) {
+    def gatherDataGenerators(event: GatherDataEvent): Unit = {
         val gen = event.getGenerator
         val helper = event.getExistingFileHelper
         if (event.includeClient()) {
@@ -307,7 +307,7 @@ private class ItemModels(gen: DataGenerator, fileHelper:ExistingFileHelper) exte
 
     override def getName = "ProjectRed-Transmission Item Models."
 
-    override protected def registerModels() {
+    override protected def registerModels(): Unit = {
         val wire = getExistingFile(new ResourceLocation(MOD_ID, "item/wire"))
         val framedWire = getExistingFile(new ResourceLocation(MOD_ID, "item/framed_wire"))
 
@@ -393,7 +393,7 @@ private class ItemModels(gen: DataGenerator, fileHelper:ExistingFileHelper) exte
 private class ItemTags(gen: DataGenerator, fileHelper:ExistingFileHelper) extends ItemTagsProvider(gen, new BlockTagsProvider(gen, MOD_ID, fileHelper), MOD_ID, fileHelper) {
     override def getName = "ProjectRed-Transmission Item Tags."
 
-    override protected def addTags() {
+    override protected def addTags(): Unit = {
         tag(tagItemInsulatedWire)
             .add(itemInsulatedWhiteWire)
             .add(itemInsulatedOrangeWire)
@@ -474,7 +474,7 @@ private class Recipes(gen: DataGenerator) extends RecipeProvider(gen) {
 
     override def getName = "ProjectRed-Transmission Recipes."
 
-    override protected def registerRecipes() {
+    override protected def registerRecipes(): Unit = {
 
         shapedRecipe(itemRedAlloyWire, 12)
             .key('R', itemRedIngot)

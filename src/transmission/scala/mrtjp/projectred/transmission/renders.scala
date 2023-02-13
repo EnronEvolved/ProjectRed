@@ -44,25 +44,25 @@ trait TWireItemRenderCommon extends IItemRenderer {
         }
     }
 
-    def renderWireInventory(stack: ItemStack, wireType: WireType, ccrs: CCRenderState, transformType: TransformType, mStack: MatrixStack, renderTypes: IRenderTypeBuffer) {
+    def renderWireInventory(stack: ItemStack, wireType: WireType, ccrs: CCRenderState, transformType: TransformType, mStack: MatrixStack, renderTypes: IRenderTypeBuffer): Unit = {
 
         ccrs.bind(RenderType.cutout(), renderTypes, mStack)
         doRender(wireType.getThickness, wireType.getItemColour << 8 | 0xFF, ccrs, new IconTransformation(wireType.getTextures.get(0)))
     }
 
-    def doRender(thickness: Int, renderHue: Int, ccrs: CCRenderState, ops: IVertexOperation*)
+    def doRender(thickness: Int, renderHue: Int, ccrs: CCRenderState, ops: IVertexOperation*): Unit 
 }
 
 object WireItemRenderer extends TWireItemRenderCommon {
 
-    override def doRender(thickness: Int, renderHue: Int, ccrs: CCRenderState, ops: IVertexOperation*) {
+    override def doRender(thickness: Int, renderHue: Int, ccrs: CCRenderState, ops: IVertexOperation*): Unit = {
         RenderWire.renderInv(thickness, renderHue, ccrs, ops: _*)
     }
 }
 
 object FramedWireItemRenderer extends TWireItemRenderCommon {
 
-    override def doRender(thickness: Int, renderHue: Int, ccrs: CCRenderState, ops: IVertexOperation*) {
+    override def doRender(thickness: Int, renderHue: Int, ccrs: CCRenderState, ops: IVertexOperation*): Unit = {
         RenderFramedWire.renderInv(thickness, renderHue, ccrs, ops: _*)
     }
 }

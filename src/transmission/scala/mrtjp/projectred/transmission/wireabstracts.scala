@@ -33,12 +33,12 @@ import scala.jdk.CollectionConverters._
 
 trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagationCommons with TSwitchPacket with TNormalOcclusionPart
 {
-    def preparePlacement(side:Direction){}
+    def preparePlacement(side:Direction): Unit = {}
 
     override def getPlacementSound(context: ItemUseContext) = SoundType.GLASS
 
-    override def onPartChanged(part:TMultiPart)
-    {
+    override def onPartChanged(part:TMultiPart): Unit
+    = {
         if (!world.isClientSide) {
             WirePropagator.logCalculation()
 
@@ -50,8 +50,8 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
         }
     }
 
-    override def onNeighborBlockChanged(from: BlockPos)
-    {
+    override def onNeighborBlockChanged(from: BlockPos): Unit
+    = {
         if (!world.isClientSide) {
             if (dropIfCantStay()) return
             WirePropagator.logCalculation()
@@ -63,8 +63,8 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
         }
     }
 
-    override def onAdded()
-    {
+    override def onAdded(): Unit
+    = {
         super.onAdded()
         if (!world.isClientSide) {
             if (updateInward()) onMaskChanged()
@@ -72,16 +72,16 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
         }
     }
 
-    override def onRemoved()
-    {
+    override def onRemoved(): Unit
+    = {
         super.onRemoved()
         if (!world.isClientSide) notifyAllExternals()
     }
 
-    def sendConnUpdate()
+    def sendConnUpdate(): Unit 
 
-    override def onMaskChanged()
-    {
+    override def onMaskChanged(): Unit
+    = {
         sendConnUpdate()
     }
 
@@ -96,8 +96,8 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
         else false
     }
 
-    def drop()
-    {
+    def drop(): Unit
+    = {
         TileMultiPart.dropItem(getItem, world, Vector3.fromTileCenter(tile))
         tile.remPart(this)
     }
@@ -112,8 +112,8 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
 
     override def pickItem(hit:PartRayTraceResult) = getItem
 
-    override def onSignalUpdate()
-    {
+    override def onSignalUpdate(): Unit
+    = {
         tile.setChanged()
     }
 
@@ -152,8 +152,8 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
     }
 
     @OnlyIn(Dist.CLIENT)
-    override def renderDynamic(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float)
-    {
+    override def renderDynamic(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float): Unit
+    = {
         if(!useStaticRenderer) doFastTessellation(mStack, buffers, packedLight, packedOverlay, partialTicks)
     }
 
@@ -161,10 +161,10 @@ trait TWireCommons extends TMultiPart with TConnectableCommons with TPropagation
     def getRenderLayer = RenderType.solid()
 
     @OnlyIn(Dist.CLIENT)
-    def doStaticTessellation(layer:RenderType, ccrs:CCRenderState)
+    def doStaticTessellation(layer:RenderType, ccrs:CCRenderState): Unit 
 
     @OnlyIn(Dist.CLIENT)
-    def doFastTessellation(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float)
+    def doFastTessellation(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float): Unit 
 
     def useStaticRenderer = Configurator.staticWires
 }
@@ -175,31 +175,31 @@ abstract class WirePart(wireType:WireType) extends TMultiPart with TWireCommons 
 
     override final def getType = getWireType.getPartType
 
-    override def preparePlacement(side: Direction)
-    {
+    override def preparePlacement(side: Direction): Unit
+    = {
         setSide(side.ordinal() ^ 1)
     }
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         tag.putInt("connMap", connMap)
         tag.putByte("side", side.toByte)
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         connMap = tag.getInt("connMap")
         setSide(tag.getByte("side"))
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         packet.writeInt(connMap)
         packet.writeByte(orientation)
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         connMap = packet.readInt()
         orientation = packet.readByte()
     }
@@ -212,8 +212,8 @@ abstract class WirePart(wireType:WireType) extends TMultiPart with TWireCommons 
         case _ => super.read(packet, key)
     }
 
-    override def sendConnUpdate()
-    {
+    override def sendConnUpdate(): Unit
+    = {
         sendUpdate(1, _.writeInt(connMap))
     }
 
@@ -254,8 +254,8 @@ abstract class WirePart(wireType:WireType) extends TMultiPart with TWireCommons 
     override def solid(side:Int) = false
 
     @OnlyIn(Dist.CLIENT)
-    override def doFastTessellation(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float)
-    {
+    override def doFastTessellation(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float): Unit
+    = {
         val ccrs = CCRenderState.instance()
         ccrs.reset()
         ccrs.brightness = packedLight
@@ -264,8 +264,8 @@ abstract class WirePart(wireType:WireType) extends TMultiPart with TWireCommons 
         RenderWire.render(this, ccrs)
     }
     @OnlyIn(Dist.CLIENT)
-    override def doStaticTessellation(layer:RenderType, ccrs:CCRenderState)
-    {
+    override def doStaticTessellation(layer:RenderType, ccrs:CCRenderState): Unit
+    = {
         RenderWire.render(this, ccrs)
     }
 }
@@ -278,24 +278,24 @@ abstract class FramedWirePart(wireType:WireType) extends TMultiPart with TWireCo
 
     override final def getType = getWireType.getPartType
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         tag.putInt("connMap", connMap)
         if (material != null) {
             tag.putString("mat", material.getRegistryName.toString)
         }
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         connMap = tag.getInt("connMap")
         if (tag.contains("mat")) {
             material = MicroMaterialRegistry.getMaterial(tag.getString("mat"))
         }
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         packet.writeByte(clientConnMap)
         packet.writeBoolean(material != null)
         if (material != null) {
@@ -303,8 +303,8 @@ abstract class FramedWirePart(wireType:WireType) extends TMultiPart with TWireCo
         }
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         connMap = packet.readUByte()
         if (packet.readBoolean()) {
             material = packet.readRegistryIdUnsafe(MicroMaterialRegistry.MICRO_MATERIALS)
@@ -327,13 +327,13 @@ abstract class FramedWirePart(wireType:WireType) extends TMultiPart with TWireCo
 
     def clientConnMap = connMap&0x3F|connMap>>6&0x3F
 
-    override def sendConnUpdate()
-    {
+    override def sendConnUpdate(): Unit
+    = {
         sendUpdate(1, _.writeByte(clientConnMap))
     }
 
-    def sendMatUpdate()
-    {
+    def sendMatUpdate(): Unit
+    = {
         if (material != null) {
             sendUpdate(2, _.writeRegistryIdUnsafe(MicroMaterialRegistry.MICRO_MATERIALS, material))
         } else sendUpdate(3)
@@ -428,8 +428,8 @@ abstract class FramedWirePart(wireType:WireType) extends TMultiPart with TWireCo
     override def getRenderLayer = RenderType.cutout()
 
     @OnlyIn(Dist.CLIENT)
-    override def doFastTessellation(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float)
-    {
+    override def doFastTessellation(mStack: MatrixStack, buffers: IRenderTypeBuffer, packedLight: Int, packedOverlay: Int, partialTicks: Float): Unit
+    = {
         val ccrs = CCRenderState.instance()
         ccrs.reset()
         ccrs.brightness = packedLight
@@ -439,8 +439,8 @@ abstract class FramedWirePart(wireType:WireType) extends TMultiPart with TWireCo
     }
 
     @OnlyIn(Dist.CLIENT)
-    override def doStaticTessellation(layer:RenderType, ccrs:CCRenderState)
-    {
+    override def doStaticTessellation(layer:RenderType, ccrs:CCRenderState): Unit
+    = {
         RenderFramedWire.render(this, ccrs)
     }
 }

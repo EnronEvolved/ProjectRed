@@ -19,7 +19,7 @@ trait IBundledCablePart extends IWirePart with IBundledEmitter
 
     def calculateSignal:Array[Byte]
 
-    def setSignal(newSignal:Array[Byte])
+    def setSignal(newSignal:Array[Byte]): Unit 
 
     def getBundledColour:Int
 }
@@ -29,28 +29,28 @@ trait TBundledCableCommons extends TWireCommons with TBundledAquisitionsCommons 
     var signal = new Array[Byte](16) //server-side only
     var colour = getWireType.getColourIdx.toByte
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         super.save(tag)
         tag.putByteArray("signal", signal)
         tag.putByte("colour", colour)
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         super.load(tag)
         signal = tag.getByteArray("signal")
         colour = tag.getByte("colour")
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         super.writeDesc(packet)
         packet.writeByte(colour)
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         super.readDesc(packet)
         colour = packet.readByte()
     }
@@ -64,8 +64,8 @@ trait TBundledCableCommons extends TWireCommons with TBundledAquisitionsCommons 
     }
 
     protected var propagatingMask = 0xFFFF
-    override def updateAndPropagate(from:TMultiPart, mode:Int)
-    {
+    override def updateAndPropagate(from:TMultiPart, mode:Int): Unit
+    = {
         import mrtjp.projectred.core.BundledCommons._
         val mask = getUpdateMask(from, mode)
         if (mode == DROPPING && isSignalZero(getBundledSignal, mask)) return
@@ -129,8 +129,8 @@ trait TBundledCableCommons extends TWireCommons with TBundledAquisitionsCommons 
     }
 
     protected val tmpSignal = new Array[Byte](16)
-    protected def tmpSignalClear()
-    {
+    protected def tmpSignalClear(): Unit
+    = {
         for (i <- 0 until 16) tmpSignal(i) = 0.toByte
     }
 
@@ -146,8 +146,8 @@ trait TBundledCableCommons extends TWireCommons with TBundledAquisitionsCommons 
         else true
     }
 
-    override def setSignal(newSignal:Array[Byte])
-    {
+    override def setSignal(newSignal:Array[Byte]): Unit
+    = {
         if (newSignal == null) signal.transform(_ => 0.toByte)
         else for (i <- 0 until 16) signal(i) = newSignal(i)
     }
