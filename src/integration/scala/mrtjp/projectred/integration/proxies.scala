@@ -48,7 +48,7 @@ class IntegrationProxyClient extends IntegrationProxy
     }
 
     @OnlyIn(Dist.CLIENT)
-    def onModelRegistryEvent(event:ModelRegistryEvent) {
+    def onModelRegistryEvent(event:ModelRegistryEvent): Unit = {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(ProjectRedIntegration.MOD_ID, "gate"), new GateItemRenderer.Loader)
     }
 }

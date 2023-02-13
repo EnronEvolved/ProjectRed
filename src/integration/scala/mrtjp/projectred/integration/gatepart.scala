@@ -40,38 +40,38 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
     var schedTime = 0L
 
     def shape = gateShape&0xFF
-    def setShape(s:Int){ gateShape = s.toByte }
+    def setShape(s:Int): Unit = { gateShape = s.toByte }
 
-    def preparePlacement(player:PlayerEntity, pos:BlockPos, side:Int)
-    {
+    def preparePlacement(player:PlayerEntity, pos:BlockPos, side:Int): Unit
+    = {
         setSide(side^1)
         setRotation((Rotation.getSidedRotation(player, side)+2)%4)
     }
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         tag.putByte("orient", orientation)
         tag.putByte("shape", gateShape)
         tag.putInt("connMap", connMap)
         tag.putLong("schedTime", schedTime)
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         orientation = tag.getByte("orient")
         gateShape = tag.getByte("shape")
         connMap = tag.getInt("connMap")
         schedTime = tag.getLong("schedTime")
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         packet.writeByte(orientation)
         packet.writeByte(gateShape)
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         orientation = packet.readByte()
         gateShape = packet.readByte()
     }
@@ -96,18 +96,18 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
 
     override def canConnectCorner(r:Int) = false
 
-    override def scheduledTick()
-    {
+    override def scheduledTick(): Unit
+    = {
         gateLogicOnScheduledTick()
     }
 
-    override def scheduleTick(ticks:Int)
-    {
+    override def scheduleTick(ticks:Int): Unit
+    = {
         if (schedTime < 0) schedTime = world.getGameTime+ticks
     }
 
-    def processScheduled()
-    {
+    def processScheduled(): Unit
+    = {
         if (schedTime >= 0 && world.getGameTime >= schedTime)
         {
             schedTime = -1
@@ -115,20 +115,20 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         }
     }
 
-    def onChange()
-    {
+    def onChange(): Unit
+    = {
         processScheduled()
         gateLogicOnChange()
     }
 
-    override def tick()
-    {
+    override def tick(): Unit
+    = {
         if (!world.isClientSide) processScheduled()
         gateLogicOnTick()
     }
 
-    override def onPartChanged(part:TMultiPart)
-    {
+    override def onPartChanged(part:TMultiPart): Unit
+    = {
         if (!world.isClientSide)
         {
             updateOutward()
@@ -136,8 +136,8 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         }
     }
 
-    override def onNeighborBlockChanged(from:BlockPos)
-    {
+    override def onNeighborBlockChanged(from:BlockPos): Unit
+    = {
         if (!world.isClientSide)
         {
             if (dropIfCantStay()) return
@@ -146,8 +146,8 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         }
     }
 
-    override def onAdded()
-    {
+    override def onAdded(): Unit
+    = {
         super.onAdded()
         if (!world.isClientSide)
         {
@@ -157,14 +157,14 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         }
     }
 
-    override def onRemoved()
-    {
+    override def onRemoved(): Unit
+    = {
         super.onRemoved()
         if (!world.isClientSide) notifyAllExternals()
     }
 
-    override def onChunkLoad(chunk: Chunk)
-    {
+    override def onChunkLoad(chunk: Chunk): Unit
+    = {
         super.onChunkLoad(chunk)
         if (tile != null) {
             gateLogicOnWorldLoad()
@@ -183,7 +183,7 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         else false
     }
 
-    def drop() {
+    def drop(): Unit = {
         TileMultiPart.dropItem(getItem, world, Vector3.fromTileCenter(tile))
         tile.remPart(this)
     }
@@ -225,8 +225,8 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         ActionResultType.PASS
     }
 
-    def configure()
-    {
+    def configure(): Unit
+    = {
         if (gateLogicCycleShape()) {
             updateInward()
             tile.setChanged()
@@ -237,8 +237,8 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         }
     }
 
-    def rotate()
-    {
+    def rotate(): Unit
+    = {
         setRotation((rotation+1)%4)
         updateInward()
         tile.setChanged()
@@ -248,13 +248,13 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
         onChange()
     }
 
-    def sendShapeUpdate()
-    {
+    def sendShapeUpdate(): Unit
+    = {
         sendUpdate(2, _.writeByte(gateShape))
     }
 
-    def sendOrientUpdate()
-    {
+    def sendOrientUpdate(): Unit
+    = {
         sendUpdate(1, _.writeByte(orientation))
     }
 
@@ -269,8 +269,8 @@ abstract class GatePart(gateType:GateType) extends TMultiPart with TNormalOcclus
     }
 
     @OnlyIn(Dist.CLIENT)
-    override def renderDynamic(mStack:MatrixStack, buffers:IRenderTypeBuffer, packedLight:Int, packedOverlay:Int, partialTicks:Float)
-    {
+    override def renderDynamic(mStack:MatrixStack, buffers:IRenderTypeBuffer, packedLight:Int, packedOverlay:Int, partialTicks:Float): Unit
+    = {
         val ccrs = CCRenderState.instance()
         ccrs.reset()
         ccrs.brightness = packedLight

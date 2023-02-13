@@ -89,8 +89,8 @@ object ComponentStore
     var icChipIconOff:TextureAtlasSprite = _
     var icHousingIcon:TextureAtlasSprite = _
 
-    def registerIcons(map:AtlasRegistrar)
-    {
+    def registerIcons(map:AtlasRegistrar): Unit
+    = {
         val baseTex = "projectred-integration:block/"
 
         def register(path:String, handler:Consumer[TextureAtlasSprite]):Unit =
@@ -350,9 +350,9 @@ import mrtjp.projectred.integration.ComponentStore._
 
 abstract class ComponentModel
 {
-    def renderModel(t: Transformation, orient: Int, ccrs: CCRenderState)
+    def renderModel(t: Transformation, orient: Int, ccrs: CCRenderState): Unit 
 
-    def registerIcons(reg:AtlasRegistrar){}
+    def registerIcons(reg:AtlasRegistrar): Unit = {}
 }
 
 abstract class SingleComponentModel extends ComponentModel
@@ -361,8 +361,8 @@ abstract class SingleComponentModel extends ComponentModel
 
     def getUVT:UVTransformation
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         models(orient).render(ccrs, t, getUVT)
     }
 }
@@ -380,8 +380,8 @@ abstract class MultiComponentModel extends ComponentModel
 
     def getUVT:UVTransformation
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         models(state)(orient).render(ccrs, t, getUVT)
     }
 }
@@ -525,14 +525,14 @@ object WireModel3D
         model
     }
 
-    def generateWireSegment(model:CCModel, i:Int, rect:Rectangle4i)
-    {
+    def generateWireSegment(model:CCModel, i:Int, rect:Rectangle4i): Unit
+    = {
         generateWireSegment(model, i, TWireModel.border(rect), 0.01, 0)
         generateWireSegment(model, i+20, rect, 0.02, 1)
     }
 
-    def generateWireSegment(model:CCModel, i:Int, rect:Rectangle4i, h:Double, icon:Int)
-    {
+    def generateWireSegment(model:CCModel, i:Int, rect:Rectangle4i, h:Double, icon:Int): Unit
+    = {
         val x1 = rect.x/32D
         val x2 = (rect.x+rect.w)/32D
         val z1 = rect.y/32D
@@ -712,8 +712,8 @@ class PointerModel(x:Double, y:Double, z:Double, scale:Double = 1) extends Compo
 
     var angle = 0D
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         models(orient).render(ccrs, new Rotation(-angle+MathHelper.pi, 0, 1, 0).`with`(pos.translation()).
                 `with`(dynamicT(orient)).`with`(t), new IconTransformation(pointerIcon), LightModel.standardLightModel)
     }
@@ -820,8 +820,8 @@ class SigLightPanelModel(pos:Vector3, rotY:Boolean) extends ComponentModel
         }
     }
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         val icont = new IconTransformation(busXcvrIcon)
         (if (sideInd) modelsSI else models)(orient).render(ccrs, t, icont)
 
@@ -884,8 +884,8 @@ class SignalBarModel(x:Double, z:Double) extends ComponentModel
         for (i <- 0 until 48) models(i) = bakeCopy(base, i)
     }
 
-    def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         val iconT = new IconTransformation(busConvIcon)
         models(orient%24).render(ccrs, t, iconT)
         val position = new TransformationList(pos.translation).`with`(orientT(orient%24)).`with`(t)
@@ -902,8 +902,8 @@ class InputPanelButtonsModel extends ComponentModel
 
     var pressMask = 0
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         val icon = new IconTransformation(baseIcon)
         for (i <- 0 until 16)
         {
@@ -913,8 +913,8 @@ class InputPanelButtonsModel extends ComponentModel
         }
     }
 
-    def renderLights(ccrs:CCRenderState, mStack:MatrixStack, buffers:IRenderTypeBuffer, t:Transformation)
-    {
+    def renderLights(ccrs:CCRenderState, mStack:MatrixStack, buffers:IRenderTypeBuffer, t:Transformation): Unit
+    = {
         for (i <- 0 until 16) if ((pressMask&1<<i) != 0) {
             RenderHalo.prepareRenderState(ccrs, mStack, buffers)
             RenderHalo.renderToCCRS(ccrs, lights(i), i, t)
@@ -965,8 +965,8 @@ abstract class CellTopWireModel(wireTop:CCModel) extends CellWireModel
 
     def getIconT:UVTransformation
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         top(orient).render(ccrs, t, getIconT, colourMult)
         import mrtjp.projectred.integration.CellTopWireModel._
         if ((conn&2) == 0) right(orient).render(ccrs, t, getIconT, colourMult)
@@ -982,8 +982,8 @@ abstract class CellBottomWireModel(wireBottom:CCModel) extends CellWireModel
 
     def getUVT:IconTransformation
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         bottom(orient).render(ccrs, t, getUVT, colourMult)
     }
 }
@@ -1046,8 +1046,8 @@ trait SegModel
     var onColour = EnumColour.RED.rgba
     var offColour = EnumColour.BLACK.rgba
 
-    def setOnColourIndex(colour:Byte)
-    {
+    def setOnColourIndex(colour:Byte): Unit
+    = {
         onColour = EnumColour.values()(colour&0xFF).rgba
     }
 }
@@ -1061,8 +1061,8 @@ class SevenSegModel(x:Double, z:Double) extends SingleComponentModel with SegMod
 
     override def getUVT = new IconTransformation(segment)
 
-    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState)
-    {
+    override def renderModel(t:Transformation, orient:Int, ccrs:CCRenderState): Unit
+    = {
         super.renderModel(t, orient, ccrs)
 
         val iconT = new IconTransformation(segmentDisp)
@@ -1084,8 +1084,8 @@ class SixteenSegModel(x:Double, z:Double) extends SingleComponentModel with SegM
 
     override def getUVT = new IconTransformation(segment)
 
-    override def renderModel(t: Transformation, orient: Int, ccrs: CCRenderState)
-    {
+    override def renderModel(t: Transformation, orient: Int, ccrs: CCRenderState): Unit
+    = {
         super.renderModel(t, orient, ccrs)
 
         val iconT = new IconTransformation(segmentDisp)

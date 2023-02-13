@@ -106,7 +106,7 @@ object IntegrationNetwork
     val INCR_TIMER_FROM_CLIENT = 3
     val INCR_COUNTER_FROM_CLIENT = 4
 
-    def init() {
+    def init(): Unit = {
         LOCK.lock()
         PacketCustomChannelBuilder.named(NET_CHANNEL)
                 .assignClientHandler(() => () => ClientHandler)
@@ -152,7 +152,7 @@ private object ClientHandler extends IClientPacketHandler
         }
     }
 
-    private def handleOpenTimerGuiMessage(mc:Minecraft, data:MCDataInput) {
+    private def handleOpenTimerGuiMessage(mc:Minecraft, data:MCDataInput): Unit = {
         readPartIndex(mc.level, data) match  {
             case gate:ITimerGuiLogic =>
                 mc.setScreen(new GuiTimer(gate))
@@ -160,7 +160,7 @@ private object ClientHandler extends IClientPacketHandler
         }
     }
 
-    private def handleOpenCounterGuiMessage(mc:Minecraft, data:MCDataInput) {
+    private def handleOpenCounterGuiMessage(mc:Minecraft, data:MCDataInput): Unit = {
         readPartIndex(mc.level, data) match  {
             case gate:ICounterGuiLogic =>
                 mc.setScreen(new GuiCounter(gate))

@@ -26,28 +26,28 @@ abstract class RedstoneGatePart(gateType:GateType) extends GatePart(gateType) wi
     private var gateState:Byte = 0
 
     def state = gateState&0xFF
-    def setState(s:Int){ gateState = s.toByte }
+    def setState(s:Int): Unit = { gateState = s.toByte }
 
-    override def save(tag:CompoundNBT)
-    {
+    override def save(tag:CompoundNBT): Unit
+    = {
         super.save(tag)
         tag.putByte("state", gateState)
     }
 
-    override def load(tag:CompoundNBT)
-    {
+    override def load(tag:CompoundNBT): Unit
+    = {
         super.load(tag)
         gateState = tag.getByte("state")
     }
 
-    override def writeDesc(packet:MCDataOutput)
-    {
+    override def writeDesc(packet:MCDataOutput): Unit
+    = {
         super.writeDesc(packet)
         packet.writeByte(gateState)
     }
 
-    override def readDesc(packet:MCDataInput)
-    {
+    override def readDesc(packet:MCDataInput): Unit
+    = {
         super.readDesc(packet)
         gateState = packet.readByte()
     }
@@ -60,19 +60,19 @@ abstract class RedstoneGatePart(gateType:GateType) extends GatePart(gateType) wi
         case _ => super.read(packet, key)
     }
 
-    def sendStateUpdate()
-    {
+    def sendStateUpdate(): Unit
+    = {
         sendUpdate(5, _.writeByte(gateState))
     }
 
-    def onInputChange()
-    {
+    def onInputChange(): Unit
+    = {
         tile.setChanged()
         sendStateUpdate()
     }
 
-    def onOutputChange(mask:Int)
-    {
+    def onOutputChange(mask:Int): Unit
+    = {
         tile.setChanged()
         sendStateUpdate()
         tile.internalPartChange(this)
@@ -94,8 +94,8 @@ abstract class RedstoneGatePart(gateType:GateType) extends GatePart(gateType) wi
         else gateLogicCanConnect(toInternal(absoluteRot(side)))
     }
 
-    override def notifyExternals(mask:Int)
-    {
+    override def notifyExternals(mask:Int): Unit
+    = {
         var smask = 0
 
         for (r <- 0 until 4) if ((mask&1<<r) != 0) {

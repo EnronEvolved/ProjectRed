@@ -74,7 +74,7 @@ abstract class ArrayGatePart(gateType:GateType) extends RedstoneGatePart(gateTyp
         WirePropagator.setDustProvidePower(false)
         WirePropagator.redwiresProvidePower = false
         var s = 0
-        def raise(sig:Int){ if (sig > s) s = sig }
+        def raise(sig:Int): Unit = { if (sig > s) s = sig }
 
         for (r <- 0 until 4) if ((propagationMask&1<<r) != 0)
             if (maskConnectsCorner(r)) raise(calcCornerSignal(r))
@@ -171,7 +171,7 @@ abstract class ArrayGatePart(gateType:GateType) extends RedstoneGatePart(gateTyp
     def propogationMask(r:Int):Int
 
     def getSignal(mask:Int):Int
-    def setSignal(mask:Int, signal:Int)
+    def setSignal(mask:Int, signal:Int): Unit 
 
     def overrideSignal(mask:Int) = false
     def calculateSignal(mask:Int) = 0
@@ -238,8 +238,8 @@ abstract class ArrayGatePartCrossing(gateType:GateType) extends ArrayGatePart(ga
     override def getHeight(r:Int) = 10.0D
 
     override def getSignal(mask:Int) = (if (mask == 0x5) signal1 else signal2)&0xFF
-    override def setSignal(mask:Int, signal:Int)
-    {
+    override def setSignal(mask:Int, signal:Int): Unit
+    = {
         if (mask == 0x5) signal1 = signal.toByte else signal2 = signal.toByte
     }
 

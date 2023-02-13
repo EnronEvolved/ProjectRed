@@ -225,7 +225,7 @@ class Repeater extends ComboGatePart(GateType.REPEATER)
 
     override def calcOutput(input:Int):Int = if (input == 0) 0 else 1
 
-    override def gateLogicOnChange(){ if (schedTime < 0) super.gateLogicOnChange() }
+    override def gateLogicOnChange(): Unit = { if (schedTime < 0) super.gateLogicOnChange() }
 
     // Allow configuring without screwdriver
     override def gateLogicActivate(player:PlayerEntity, held:ItemStack, hit:PartRayTraceResult):Boolean = {
@@ -252,7 +252,7 @@ class Randomizer extends ComboGatePart(GateType.RANDOMIZER)
             outputMask(shape)&TFaceOrient.shiftMask(rand.nextInt(8), 3)
     }
 
-    override def gateLogicOnChange() {
+    override def gateLogicOnChange(): Unit = {
         super.gateLogicOnChange()
         if ((state&4) != 0) scheduleTick(2)
     }
@@ -281,7 +281,7 @@ class LightSensor extends ComboGatePart(GateType.LIGHT_SENSOR)
 
     override def getOutput(r:Int):Int = if (r == 2) state>>4 else 0
 
-    override def gateLogicSetup(){ gateLogicOnTick() }
+    override def gateLogicSetup(): Unit = { gateLogicOnTick() }
 
     override def gateLogicOnTick():Unit = {
         if (world.isClientSide) return

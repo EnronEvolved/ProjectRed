@@ -30,7 +30,7 @@ trait TExtraStateGatePart extends RedstoneGatePart
     private var lState2:Byte = 0
 
     override def state2 = lState2&0xFF
-    def setState2(state:Int){ lState2 = state.toByte }
+    def setState2(state:Int): Unit = { lState2 = state.toByte }
 
     def clientState2 = false
 
@@ -200,22 +200,22 @@ class ToggleLatch extends RedstoneGatePart(GateType.TOGGLE_LATCH) with TExtraSta
 trait ITimerGuiLogic extends GatePart
 {
     def getTimerMax:Int
-    def setTimerMax(t:Int)
+    def setTimerMax(t:Int): Unit 
 }
 
 trait ICounterGuiLogic extends GatePart
 {
-    def getCounterMax:Int
-    def setCounterMax(i:Int)
+    def getCounterMax: Int
+    def setCounterMax(i:Int): Unit 
 
-    def getCounterIncr:Int
-    def setCounterIncr(i:Int)
+    def getCounterIncr: Int
+    def setCounterIncr(i:Int): Unit 
 
-    def getCounterDecr:Int
-    def setCounterDecr(i:Int)
+    def getCounterDecr: Int
+    def setCounterDecr(i:Int): Unit 
 
-    def getCounterValue:Int
-    def setCounterValue(i:Int)
+    def getCounterValue: Int
+    def setCounterValue(i:Int): Unit 
 }
 
 trait TTimerGatePart extends RedstoneGatePart with ITimerGuiLogic
@@ -362,7 +362,7 @@ class Sequencer extends RedstoneGatePart(GateType.SEQUENCER) with ITimerGuiLogic
     override def gateLogicOnScheduledTick():Unit = {}
 
     override def getTimerMax:Int = pointer_max
-    override def setTimerMax(time:Int) {
+    override def setTimerMax(time:Int): Unit = {
         var t = time
         val minTime = math.max(4, Configurator.minTimerTicks)
         if (t < minTime) t = minTime
@@ -608,8 +608,8 @@ class StateCell extends RedstoneGatePart(GateType.STATE_CELL) with TTimerGatePar
         }
     }
 
-    override def pointerTick()
-    {
+    override def pointerTick(): Unit
+    = {
         resetPointer()
         if (!world.isClientSide) {
             setState2(0)
@@ -682,7 +682,7 @@ class Comparator extends RedstoneGatePart(GateType.COMPARATOR) with INeighborTil
     var lState2:Short = 0
 
     override def state2:Int = lState2&0xFFFF
-    def setState2(i:Int){ lState2 = i.toShort }
+    def setState2(i:Int): Unit = { lState2 = i.toShort }
 
     override def outputMask(shape:Int) = 1
     override def inputMask(shape:Int) = 0xE
